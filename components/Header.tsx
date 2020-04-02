@@ -2,19 +2,16 @@ import Link from "next/link";
 
 const Header = () => {
   return (
-    <div className="hero-head">
-      <nav className="navbar">
+    <div className="hero-head rc-Header">
+      <nav className="navbar header-nav">
         <div className="container">
           <div className="navbar-brand">
             <Link href="/">
               <a className="navbar-item">
-                <h1>Team App</h1>
+                <h2 className="subtitle has-text-weight-bold">Team App</h2>
               </a>
             </Link>
-            <span
-              className="navbar-burger burger"
-              data-target="navbarMenuHeroA"
-            >
+            <span className="navbar-burger burger" data-target="navbarMenuHeroA">
               <span></span>
               <span></span>
               <span></span>
@@ -28,6 +25,13 @@ const Header = () => {
               </Link>
               <Link href="/signup">
                 <a className="navbar-item">Sign Up</a>
+              </Link>
+              {/* TODO: remove after testing */}
+              <Link href="/create-account">
+                <a className="navbar-item">Create Account</a>
+              </Link>
+              <Link href="/view-team">
+                <a className="navbar-item">View Team</a>
               </Link>
               {/* <span className="navbar-item">
                   <a className="button is-primary is-inverted">
