@@ -1,17 +1,25 @@
 import { Fragment } from 'react';
 import Link from "next/link";
+import { useRouter } from 'next/router';
 import { Formik, Field } from 'formik';
 import { gql } from 'apollo-boost';
 import { useMutation } from '@apollo/react-hooks';
+import classnames from 'classnames';
 
 import Header from '../components/Header';
 import { signupSchema, initialValues } from '../validation/signup';
 import errorMessages from '../errors';
 
 const SignUp = () => {
-  const [createUsers, { data, error }] = useMutation(SIGN_UP);
+  const [createUsers, { data, loading, error }] = useMutation(SIGN_UP);
   const { code }: { [key: string]: string } = error?.graphQLErrors?.[0].extensions || {};
+  const router = useRouter();
+  const dynamicClasses = classnames({ 'is-loading': loading });
 
+  if (data?.createUsers?.length) {
+    router.push('/signin');
+  }
+  
   return (
     <Fragment>
       <Header />
@@ -135,7 +143,7 @@ const SignUp = () => {
                               <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="button has-text-white has-text-weight-bold theme-color-bg m-r-1 no-border"
+                                className={`button has-text-white has-text-weight-bold theme-color-bg m-r-1 no-border ${dynamicClasses}`}
                               >
                                 Submit
                               </button>
@@ -161,6 +169,7 @@ const SignUp = () => {
 const SIGN_UP = gql`
   mutation createUsers($input: [UserInput]) {
     createUsers(users: $input) {
+      id
       firstName
       lastName
       email
