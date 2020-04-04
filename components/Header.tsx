@@ -27,8 +27,8 @@ const Header = () => {
                 <a className="navbar-item">Sign Up</a>
               </Link>
               {/* TODO: remove after testing */}
-              <Link href="/create-account">
-                <a className="navbar-item">Create Account</a>
+              <Link href="/create-team">
+                <a className="navbar-item">Create Team</a>
               </Link>
               <Link href="/view-team">
                 <a className="navbar-item">View Team</a>
