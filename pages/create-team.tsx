@@ -5,23 +5,24 @@ import { gql } from 'apollo-boost';
 import { useMutation, useQuery } from '@apollo/react-hooks';
 import classnames from 'classnames';
 import jwt from 'jsonwebtoken';
+import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 
 import Header from '../components/Header';
 import { initialValues, teamSchema } from '../validation/team';
+import { withContext } from '../utils/appContext';
 
-const CreateTeam = () => {
-  const [createTeam, { data, loading, error }] = useMutation(CREATE_TEAM);
+const CreateTeam: NextPage = (props: any) => {
+  const router = useRouter();
+  const [createTeam, { data: teamData, loading: teamLoading, error: teamError }] = useMutation(CREATE_TEAM);
   const { data: userData, loading: userLoading, error: userErr } = useQuery(GET_USER, {
-    variables: { id: '5e87359ec2dda07e47d1af00' },
+    variables: { id: props?.user?.id || "" },
   });
+  const teamId = teamData?.createTeam?.id;
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      const decoded: string | { [key: string]: string } | null | any = jwt.decode(token, { complete: true });
-      console.log(decoded?.payload);
-    }
-  });
+  if (teamId) {
+    router.push(`/teams/${teamId}`);
+  }
 
   return (
     <Fragment>
@@ -34,12 +35,10 @@ const CreateTeam = () => {
                 initialValues={initialValues}
                 validationSchema={teamSchema}
                 onSubmit={(values, { setSubmitting }) => {
-                  console.log(values);
                   const request = {
-                    creator: '5e80dcf959877ff31837a425',
+                    creator: userData?.user?.id,
                     ...values,
                   };
-                  console.log(request);
 
                   createTeam({
                     variables: {
@@ -130,6 +129,12 @@ const CreateTeam = () => {
   );
 };
 
+export async function getStaticProps(context: any) {
+  return {
+    props: {}, // will be passed to the page component as props
+  };
+}
+
 const CREATE_TEAM = gql`
   mutation createTeamMutation($input: CreateTeamInput) {
     createTeam(team: $input) {
@@ -143,10 +148,13 @@ const CREATE_TEAM = gql`
 `;
 
 const GET_USER = gql`
-    {user(id: "5e87359ec2dda07e47d1af00") {
-      firstName
-      lastName
-    }}
+query User($id: ID!) {
+  user(id: $id) {
+    id
+    firstName
+    lastName
+  }
+}
 `;
 
-export default CreateTeam;
+export default withContext(CreateTeam);

@@ -1,12 +1,12 @@
 import { Fragment } from 'react';
-import Link from 'next/link';
 
 import Header from '../components/Header';
 import TeamDetails from '../components/TeamDetails';
 import TeamLeadDetails from '../components/TeamLeadDetails';
+import { withContext } from '../utils/appContext';
 
 
-const ViewTeam = () => {
+const ViewTeam = (props: any) => {
   return (
     <Fragment>
       <Header />
@@ -55,4 +55,4 @@ const ViewTeam = () => {
   );
 }
 
-export default ViewTeam;
+export default withContext(ViewTeam);
