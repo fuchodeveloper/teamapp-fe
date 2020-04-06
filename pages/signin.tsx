@@ -51,7 +51,7 @@ const SignIn = () => {
                     const showOnlyServerErr = !errors.password && !errors.email;
                     return (
                       <form onSubmit={handleSubmit}>
-                        <div className="field is-horizontal m-b-2">
+                        <div className="field is-horizontal m-b-1">
                           <div className="field-label is-normal">
                             <label className="label">Email Address</label>
                           </div>
@@ -65,14 +65,15 @@ const SignIn = () => {
                                   </span>
                                 </p>
                               </div>
+
                               {errors.email && touched.email ? (
                                 <span className="help is-danger">{errors.email}</span>
-                              ) : null}
+                              ) : <br />}
                             </div>
                           </div>
                         </div>
 
-                        <div className="field is-horizontal m-b-2">
+                        <div className="field is-horizontal m-b-1">
                           <div className="field-label is-normal">
                             <label className="label">Password</label>
                           </div>
@@ -88,7 +89,7 @@ const SignIn = () => {
                               </div>
                               {errors.password && touched.password ? (
                                 <span className="help is-danger">{errors.password}</span>
-                              ) : null}
+                              ) : <br />}
                               {code === 'INVALID_CREDENTIAL' && showOnlyServerErr && (
                                 <span className="help is-danger">{errorMessages.INVALID_CREDENTIAL}</span>
                               )}

@@ -18,7 +18,7 @@ const CreateTeam: NextPage = (props: any) => {
   const { data: userData, loading: userLoading, error: userErr } = useQuery(GET_USER, {
     variables: { id: props?.user?.id || "" },
   });
-  const teamId = teamData?.createTeam?.id;
+  const teamId = teamData?.createTeam?.uniqueId;
 
   if (teamId) {
     router.push(`/teams/${teamId}`);
@@ -128,12 +128,6 @@ const CreateTeam: NextPage = (props: any) => {
     </Fragment>
   );
 };
-
-export async function getStaticProps(context: any) {
-  return {
-    props: {}, // will be passed to the page component as props
-  };
-}
 
 const CREATE_TEAM = gql`
   mutation createTeamMutation($input: CreateTeamInput) {

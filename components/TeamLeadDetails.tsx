@@ -48,6 +48,9 @@ const TeamLeadDetails = () => {
               </tbody>
             </table>
           </div>
+          <div className="has-text-right">
+            <button className="button">Manage Team Lead</button>
+          </div>
         </div>
       </section>
     </Fragment>
