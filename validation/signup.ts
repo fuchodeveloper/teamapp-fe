@@ -1,8 +1,14 @@
 import { object, string } from 'yup';
 
 export const signupSchema = object().shape({
-  firstName: string().max(40, 'Too long').required('First name is required'),
-  lastName: string().max(40, 'Too long').required('Last name is required'),
+  firstName: string()
+    .min(3, 'First name must be at least 3 characters')
+    .max(40, 'Too long')
+    .required('First name is required'),
+  lastName: string()
+    .min(3, 'Last name must be at least 3 characters')
+    .max(40, 'Too long')
+    .required('Last name is required'),
   email: string().max(40, 'Too long').email('Invalid email').required('Email is required'),
   password: string()
     .max(40, 'Too long')

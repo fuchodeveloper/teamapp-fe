@@ -1,45 +1,83 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useContext, useEffect } from 'react';
 import { Formik } from 'formik';
-
-import Header from '../components/Header';
-import { createTeamMembersSchema } from '../validation/team';
-import { withContext } from '../utils/appContext';
 import { gql } from 'apollo-boost';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation, useLazyQuery } from '@apollo/react-hooks';
+import { useRouter } from 'next/router';
 
-const CreateTeamMembers = () => {
-  const [inputFields, setInputFields] = useState([{ firstName: '', lastName: '', email: '' }]);
+import Header from '~/components/Header';
+import { withContext, appContext } from '~/utils/appContext';
+
+const CreateMembers = () => {
+  const router = useRouter();
+  const ctx = useContext(appContext);
+  const teamId = router?.query?.id;
+  const [inputFields, setInputFields] = useState([{ firstName: '', lastName: '', email: '', team: '' }]);
   const [createTeamMembers, { data: membersData, loading: membersLoading, error: membersError }] = useMutation(
     CREATE_TEAM_MEMBERS,
   );
 
-  console.log(membersData, membersLoading, membersError);
-  
+  const [getTeam, { called, loading, data: teamData, error: teamError }] = useLazyQuery(GET_TEAM);
+  const serverError = membersError?.graphQLErrors?.[0] || {};
+  const { code } = membersError?.graphQLErrors?.[0].extensions || {};
 
-  const handleInputChange = (index: number, event: any, handleChange: Function) => {
+  useEffect(() => {
+    if (teamId) {
+      getTeam({ variables: { id: teamId } });
+    }
+  }, [teamId]);
+
+  console.log(membersData, membersLoading, serverError, teamData, ctx);
+
+  const handleInputChange = (index, event, handleChange) => {
     handleChange(event);
     const values = [...inputFields];
     if (event.target.name === 'firstName') {
       values[index].firstName = event.target.value;
     } else if (event.target.name === 'lastName') {
       values[index].lastName = event.target.value;
-    } else {
+    } else if (event.target.name === 'email') {
       values[index].email = event.target.value;
     }
+    values[index].team = teamData?.team?.id;
 
     setInputFields(values);
   };
 
   const handleAddFields = () => {
     const values = [...inputFields];
-    values.push({ firstName: '', lastName: '', email: '' });
+    values.push({ firstName: '', lastName: '', email: '', team: '' });
     setInputFields(values);
   };
 
-  const handleRemoveFields = (index: number) => {
+  const handleRemoveFields = (index) => {
     const values = [...inputFields];
     values.splice(index, 1);
     setInputFields(values);
+  };
+
+  const validate = (values) => {
+    // TODO: Map through `values` array and show errors for the given `index`
+    values = values[0];
+    const errors = {};
+    if (!values.firstName.trim()) {
+      errors.firstName = 'First name is required';
+    } else if (values.firstName.length < 3 || values.firstName.length > 40) {
+      errors.firstName = 'Must be between 3-40 characters';
+    }
+
+    if (!values.lastName.trim()) {
+      errors.lastName = 'Last name is required';
+    } else if (values.lastName.length < 3 || values.lastName.length > 40) {
+      errors.lastName = 'Must be between 3-40 characters';
+    }
+
+    if (!values.email.trim()) {
+      errors.email = 'Email is required';
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+      errors.email = 'Invalid email address';
+    }
+
+    return errors;
   };
 
   return (
@@ -52,32 +90,30 @@ const CreateTeamMembers = () => {
               <div className="card-content content-padding">
                 <Formik
                   initialValues={inputFields}
-                  // validationSchema={createTeamMembersSchema}
+                  validate={() => validate(inputFields)}
                   onSubmit={(values, { setSubmitting }) => {
-
-                    // createTeam({
-                    //   variables: {
-                    //     input: request,
-                    //   },
-                    // });
-                    console.log('inputFields', inputFields);
-                    
+                    // return;
                     createTeamMembers({ variables: { input: inputFields } });
-
                     setSubmitting(false);
                   }}
                 >
                   {({ errors, touched, handleSubmit, isSubmitting, values, handleBlur, handleChange }) => {
                     console.log('errors', errors);
-                    
+                    const disabledState =
+                      !!errors.firstName || !!errors.lastName || !!errors.email;
+                      const showOnlyServerErr = !errors.firstName && !errors.lastName && !errors.email;
+
                     return (
                       <form onSubmit={handleSubmit}>
                         <div className="has-text-centered m-b-3">
                           <h2 className="title">Create Team Members</h2>
                         </div>
+                        {code === 'DUPLICATE_USER' && showOnlyServerErr && (
+                          <div className="notification">
+                            <span className="help is-danger">{serverError.message}</span>
+                          </div>
+                        )}
                         {inputFields.map((field, index) => {
-                          console.log('field', field);
-                          
                           return (
                             <Fragment key={`${field}~${index}`}>
                               <div className="field is-horizontal">
@@ -95,11 +131,17 @@ const CreateTeamMembers = () => {
                                         onBlur={handleBlur}
                                         onChange={(event) => handleInputChange(index, event, handleChange)}
                                         value={field.firstName}
+                                        required
                                       />
                                       <span className="icon is-small is-left">
                                         <i className="fas fa-user" />
                                       </span>
                                     </p>
+                                    {errors.firstName && touched.firstName ? (
+                                      <span className="help is-danger">{errors.firstName}</span>
+                                    ) : (
+                                      <br />
+                                    )}
                                   </div>
                                   <div className="field">
                                     <p className="control is-expanded has-icons-left has-icons-right">
@@ -111,11 +153,17 @@ const CreateTeamMembers = () => {
                                         onBlur={handleBlur}
                                         onChange={(event) => handleInputChange(index, event, handleChange)}
                                         value={field.lastName}
+                                        required
                                       />
                                       <span className="icon is-small is-left">
                                         <i className="fas fa-user"></i>
                                       </span>
                                     </p>
+                                    {errors.lastName && touched.lastName ? (
+                                      <span className="help is-danger">{errors.lastName}</span>
+                                    ) : (
+                                      <br />
+                                    )}
                                   </div>
                                   <div className="field">
                                     <p className="control is-expanded has-icons-left has-icons-right">
@@ -127,11 +175,23 @@ const CreateTeamMembers = () => {
                                         onBlur={handleBlur}
                                         onChange={(event) => handleInputChange(index, event, handleChange)}
                                         value={field.email}
+                                        required
+                                      />
+                                      <input
+                                        name="team"
+                                        className="input is-success"
+                                        type="hidden"
+                                        value={field.team}
                                       />
                                       <span className="icon is-small is-left">
                                         <i className="fas fa-envelope"></i>
                                       </span>
                                     </p>
+                                    {errors.email && touched.email ? (
+                                      <span className="help is-danger">{errors.email}</span>
+                                    ) : (
+                                      <br />
+                                    )}
                                   </div>
                                 </div>
                                 <div className="field">
@@ -171,7 +231,7 @@ const CreateTeamMembers = () => {
                             <div className="field">
                               <div className="control has-text-right">
                                 <button
-                                  disabled={isSubmitting}
+                                  disabled={isSubmitting || disabledState}
                                   type="submit"
                                   className="button has-text-white has-text-weight-bold theme-color-bg m-r-1 no-border"
                                 >
@@ -197,6 +257,7 @@ const CreateTeamMembers = () => {
 const CREATE_TEAM_MEMBERS = gql`
   mutation createTeamUsers($input: [CreateTeamUsersInput]) {
     createTeamUsers(input: $input) {
+      id
       firstName
       lastName
       email
@@ -205,4 +266,12 @@ const CREATE_TEAM_MEMBERS = gql`
   }
 `;
 
-export default withContext(CreateTeamMembers);
+const GET_TEAM = gql`
+  query Team($id: ID!) {
+    team(id: $id) {
+      id
+    }
+  }
+`;
+
+export default CreateMembers;

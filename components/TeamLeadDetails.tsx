@@ -1,6 +1,8 @@
 import { Fragment } from 'react';
+import format from 'date-fns/format';
+import parseISO from 'date-fns/parseISO';
 
-const TeamLeadDetails = () => {
+const TeamLeadDetails = ({ lead }: any) => {
   return (
     <Fragment>
       <section className="section">
@@ -33,18 +35,29 @@ const TeamLeadDetails = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th>1</th>
-                  <td>John</td>
-                  <td>Doe</td>
-                  <td>Wed, 15 Oct. 2020</td>
-                  <td>Thu, 23 Oct. 2020</td>
-                  <td>
-                    <a href="https://en.wikipedia.org/wiki/Leicester_City_F.C." title="Leicester City F.C.">
-                      View
-                    </a>
-                  </td>
-                </tr>
+                {lead?.id ? (
+                  <Fragment>
+                    <tr>
+                      <th>1</th>
+                      <td>{lead.firstName}</td>
+                      <td>{lead.lastName}</td>
+                      <td>sdrgfaergaerger</td>
+                      <td>Thu, 23 Oct. 2020</td>
+                      <td>Thu, 23 Oct. 2020</td>
+                      <td>
+                        <a href="https://en.wikipedia.org/wiki/Leicester_City_F.C." title="Leicester City F.C.">
+                          View
+                        </a>
+                      </td>
+                    </tr>
+                  </Fragment>
+                ) : (
+                  <Fragment>
+                    <tr>
+                      <td>No team lead to show</td>
+                    </tr>
+                  </Fragment>
+                )}
               </tbody>
             </table>
           </div>
@@ -55,6 +68,6 @@ const TeamLeadDetails = () => {
       </section>
     </Fragment>
   );
-}
+};
 
 export default TeamLeadDetails;

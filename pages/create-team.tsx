@@ -3,8 +3,6 @@ import Link from 'next/link';
 import { Formik, Field } from 'formik';
 import { gql } from 'apollo-boost';
 import { useMutation, useQuery } from '@apollo/react-hooks';
-import classnames from 'classnames';
-import jwt from 'jsonwebtoken';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 
@@ -16,7 +14,7 @@ const CreateTeam: NextPage = (props: any) => {
   const router = useRouter();
   const [createTeam, { data: teamData, loading: teamLoading, error: teamError }] = useMutation(CREATE_TEAM);
   const { data: userData, loading: userLoading, error: userErr } = useQuery(GET_USER, {
-    variables: { id: props?.user?.id || "" },
+    variables: { id: props?.user?.id || '' },
   });
   const teamId = teamData?.createTeam?.uniqueId;
 
@@ -49,6 +47,7 @@ const CreateTeam: NextPage = (props: any) => {
                 }}
               >
                 {({ errors, touched, handleSubmit, isSubmitting, values, handleBlur, handleChange }) => {
+                  const disabledState = !!errors.name || !!errors.duties;
                   return (
                     <form onSubmit={handleSubmit}>
                       <div className="card-content content-padding">
@@ -63,7 +62,7 @@ const CreateTeam: NextPage = (props: any) => {
                             <div className="field is-expanded">
                               <div className="field">
                                 <p className="control is-expanded">
-                                  <Field name="name" className="input" />
+                                  <Field name="name" className="input" required />
                                 </p>
                               </div>
                               {errors.name && touched.name ? (
@@ -87,6 +86,7 @@ const CreateTeam: NextPage = (props: any) => {
                                   onBlur={handleBlur}
                                   value={values.duties}
                                   placeholder="Enter description of duties, responsibilities or a link to an exising document."
+                                  required
                                 />
                               </div>
                               {errors.duties && touched.duties ? (
@@ -104,6 +104,7 @@ const CreateTeam: NextPage = (props: any) => {
                             <div className="field">
                               <div className="control has-text-right">
                                 <button
+                                  disabled={isSubmitting || disabledState}
                                   type="submit"
                                   className="button has-text-white has-text-weight-bold theme-color-bg m-r-1 no-border"
                                 >
@@ -142,13 +143,13 @@ const CREATE_TEAM = gql`
 `;
 
 const GET_USER = gql`
-query User($id: ID!) {
-  user(id: $id) {
-    id
-    firstName
-    lastName
+  query User($id: ID!) {
+    user(id: $id) {
+      id
+      firstName
+      lastName
+    }
   }
-}
 `;
 
 export default withContext(CreateTeam);

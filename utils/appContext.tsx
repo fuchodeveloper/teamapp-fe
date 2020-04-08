@@ -1,9 +1,4 @@
-import React, { createContext, useEffect } from 'react';
-
-// export const appContext = React.createContext({});
-
-// export const Provider = appContext.Provider;
-// export const Consumer = appContext.Consumer;
+import React from 'react';
 
 export const appContext = React.createContext({
   authenticated: false,

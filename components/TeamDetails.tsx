@@ -1,6 +1,6 @@
 import { Fragment } from "react"
 
-const TeamDetails = () => {
+const TeamDetails = ({ members }: { members: { id: string, length: number, map: Function } }) => {
   return (
     <Fragment>
       <section className="section">
@@ -27,14 +27,28 @@ const TeamDetails = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th>1</th>
-                  <td>John</td>
-                  <td>Doe</td>
-                  <td>
-                    <button className="button">Edit</button>
-                  </td>
-                </tr>
+                {members?.length ? (
+                  <Fragment>
+                    {members.map((member: { id: string; firstName: string; lastName: string }, index: number) => {
+                      return (
+                        <tr key={member.id}>
+                          <th>{index + 1}</th>
+                          <td>{member.firstName}</td>
+                          <td>{member.lastName}</td>
+                          <td>
+                            <button className="button">Edit</button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </Fragment>
+                ) : (
+                  <Fragment>
+                    <tr>
+                      <td>Nothing to show.</td>
+                    </tr>
+                  </Fragment>
+                )}
               </tbody>
             </table>
           </div>

@@ -59,7 +59,7 @@ const SignIn = () => {
                             <div className="field is-expanded">
                               <div className="field">
                                 <p className="control is-expanded has-icons-left">
-                                  <Field name="email" className="input" type="email" />
+                                  <Field name="email" className="input" type="email" required />
                                   <span className="icon is-small is-left">
                                     <i className="fas fa-envelope" />
                                   </span>
@@ -68,7 +68,9 @@ const SignIn = () => {
 
                               {errors.email && touched.email ? (
                                 <span className="help is-danger">{errors.email}</span>
-                              ) : <br />}
+                              ) : (
+                                <br />
+                              )}
                             </div>
                           </div>
                         </div>
@@ -81,7 +83,7 @@ const SignIn = () => {
                             <div className="field is-expanded">
                               <div className="field">
                                 <p className="control is-expanded has-icons-left">
-                                  <Field name="password" className="input" type="password" />
+                                  <Field name="password" className="input" type="password" required />
                                   <span className="icon is-small is-left">
                                     <i className="fas fa-lock" />
                                   </span>
@@ -89,7 +91,9 @@ const SignIn = () => {
                               </div>
                               {errors.password && touched.password ? (
                                 <span className="help is-danger">{errors.password}</span>
-                              ) : <br />}
+                              ) : (
+                                <br />
+                              )}
                               {code === 'INVALID_CREDENTIAL' && showOnlyServerErr && (
                                 <span className="help is-danger">{errorMessages.INVALID_CREDENTIAL}</span>
                               )}

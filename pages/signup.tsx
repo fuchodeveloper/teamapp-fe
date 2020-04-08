@@ -57,7 +57,7 @@ const SignUp = () => {
                             <div className="field is-expanded">
                               <div className="field">
                                 <p className="control is-expanded has-icons-left">
-                                  <Field name="firstName" className="input" />
+                                  <Field name="firstName" className="input" required />
                                   <span className="icon is-small is-left">
                                     <i className="fas fa-user" />
                                   </span>
@@ -65,7 +65,7 @@ const SignUp = () => {
                               </div>
                               {errors.firstName && touched.firstName ? (
                                 <span className="help is-danger">{errors.firstName}</span>
-                              ) : null}
+                              ) : <br />}
                             </div>
                           </div>
                         </div>
@@ -78,7 +78,7 @@ const SignUp = () => {
                             <div className="field is-expanded">
                               <div className="field">
                                 <p className="control is-expanded has-icons-left">
-                                  <Field name="lastName" className="input" />
+                                  <Field name="lastName" className="input" required />
                                   <span className="icon is-small is-left">
                                     <i className="fas fa-user" />
                                   </span>
@@ -86,7 +86,7 @@ const SignUp = () => {
                               </div>
                               {errors.lastName && touched.lastName ? (
                                 <span className="help is-danger">{errors.lastName}</span>
-                              ) : null}
+                              ) : <br />}
                             </div>
                           </div>
                         </div>
@@ -99,7 +99,7 @@ const SignUp = () => {
                             <div className="field is-expanded">
                               <div className="field">
                                 <p className="control is-expanded has-icons-left">
-                                  <Field name="email" className="input" type="email" />
+                                  <Field name="email" className="input" type="email" required />
                                   <span className="icon is-small is-left">
                                     <i className="fas fa-envelope" />
                                   </span>
@@ -107,7 +107,7 @@ const SignUp = () => {
                               </div>
                               {errors.email && touched.email ? (
                                 <span className="help is-danger">{errors.email}</span>
-                              ) : null}
+                              ) : <br />}
                               {code === 'DUPLICATE_EMAIL' && showOnlyServerErr && (
                                 <span className="help is-danger">{errorMessages.DUPLICATE_EMAIL}</span>
                               )}
@@ -123,7 +123,7 @@ const SignUp = () => {
                             <div className="field is-expanded">
                               <div className="field">
                                 <p className="control is-expanded has-icons-left">
-                                  <Field name="password" className="input" type="password" />
+                                  <Field name="password" className="input" type="password" required />
                                   <span className="icon is-small is-left">
                                     <i className="fas fa-lock" />
                                   </span>
@@ -131,13 +131,15 @@ const SignUp = () => {
                               </div>
                               {errors.password && touched.password ? (
                                 <span className="help is-danger">{errors.password}</span>
-                              ) : null}
+                              ) : <br />}
                               {code === 'INTERNAL_SERVER_ERROR' && showOnlyServerErr && (
                                 <span className="help is-danger">{errorMessages.INTERNAL_SERVER_ERROR}</span>
                               )}
-                              {!errors.password && !touched.password && <span className="help">
-                                Use 7 - 15 characters, at least one numeric digit and a special character
-                              </span>}
+                              {!errors.password && !touched.password && (
+                                <span className="help">
+                                  Use 7 - 15 characters, at least one numeric digit and a special character
+                                </span>
+                              )}
                             </div>
                           </div>
                         </div>
