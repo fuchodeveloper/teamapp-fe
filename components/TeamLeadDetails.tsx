@@ -1,6 +1,5 @@
 import { Fragment } from 'react';
 import format from 'date-fns/format';
-import parseISO from 'date-fns/parseISO';
 
 const TeamLeadDetails = ({ lead }: any) => {
   return (
@@ -41,9 +40,8 @@ const TeamLeadDetails = ({ lead }: any) => {
                       <th>1</th>
                       <td>{lead.firstName}</td>
                       <td>{lead.lastName}</td>
-                      <td>sdrgfaergaerger</td>
-                      <td>Thu, 23 Oct. 2020</td>
-                      <td>Thu, 23 Oct. 2020</td>
+                      <td>{format(new Date(lead.start), 'E, dd MMM. yyyy')}</td>
+                      <td>{format(new Date(lead.stop), 'E, dd MMM. yyyy')}</td>
                       <td>
                         <a href="https://en.wikipedia.org/wiki/Leicester_City_F.C." title="Leicester City F.C.">
                           View

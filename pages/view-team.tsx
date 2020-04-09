@@ -35,7 +35,7 @@ const ViewTeam = (props: any) => {
 
           <TeamLeadDetails />
 
-          <TeamDetails />
+          {/* <TeamDetails /> */}
           
           {/* <section className="section">
             <div className="container has-text-centered">

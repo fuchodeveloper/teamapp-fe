@@ -29,7 +29,7 @@ const TeamDetails = ({ members }: { members: { id: string, length: number, map: 
               <tbody>
                 {members?.length ? (
                   <Fragment>
-                    {members.map((member: { id: string; firstName: string; lastName: string }, index: number) => {
+                    {members.map((member: { id: string; firstName: string; lastName: string, start: string }, index: number) => {
                       return (
                         <tr key={member.id}>
                           <th>{index + 1}</th>
