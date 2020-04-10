@@ -44,7 +44,7 @@ const TeamLeadDetails = ({ lead }: any) => {
                       <td>{format(new Date(lead.stop), 'E, dd MMM. yyyy')}</td>
                       <td>
                         <a href="https://en.wikipedia.org/wiki/Leicester_City_F.C." title="Leicester City F.C.">
-                          View
+                          View duties
                         </a>
                       </td>
                     </tr>
