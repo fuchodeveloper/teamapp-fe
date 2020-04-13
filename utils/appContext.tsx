@@ -3,8 +3,7 @@ import React from 'react';
 export const appContext = React.createContext({
   authenticated: false,
   user: {},
-  // setSession: () => undefined,
-  // logout: () => undefined,
+  logout: () => {},
 });
 
 export const withContext = (Component: any) => {

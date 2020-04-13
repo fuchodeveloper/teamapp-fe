@@ -22,25 +22,27 @@ const TeamDetails = ({ members }: { members: { id: string, length: number, map: 
                     <abbr title="Played">Last Name</abbr>
                   </th>
                   <th>
-                    <abbr title="Played">Manage</abbr>
+                    <abbr title="Played">Email Address</abbr>
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {members?.length ? (
                   <Fragment>
-                    {members.map((member: { id: string; firstName: string; lastName: string, start: string }, index: number) => {
-                      return (
-                        <tr key={member.id}>
-                          <th>{index + 1}</th>
-                          <td>{member.firstName}</td>
-                          <td>{member.lastName}</td>
-                          <td>
-                            <button className="button">Edit</button>
-                          </td>
-                        </tr>
-                      );
-                    })}
+                    {members.map(
+                      (member: { id: string; firstName: string; lastName: string; start: string, email: string }, index: number) => {
+                        return (
+                          <tr key={member.id}>
+                            <th>{index + 1}</th>
+                            <td>{member.firstName}</td>
+                            <td>{member.lastName}</td>
+                            <td>
+                              {member.email}
+                            </td>
+                          </tr>
+                        );
+                      },
+                    )}
                   </Fragment>
                 ) : (
                   <Fragment>
@@ -51,6 +53,9 @@ const TeamDetails = ({ members }: { members: { id: string, length: number, map: 
                 )}
               </tbody>
             </table>
+          </div>
+          <div className="has-text-right">
+            <button className="button">Add Team Members</button>
           </div>
         </div>
       </section>

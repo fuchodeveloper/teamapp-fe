@@ -7,10 +7,10 @@ import { useRouter } from 'next/router';
 import Header from '~/components/Header';
 import { withContext, appContext } from '~/utils/appContext';
 
-const CreateMembers = () => {
+const CreateMembers = (props) => {
   const router = useRouter();
   const ctx = useContext(appContext);
-  const teamId = router?.query?.id;
+  const teamId = props.id;
   const [inputFields, setInputFields] = useState([{ firstName: '', lastName: '', email: '', team: '' }]);
   const [createTeamMembers, { data: membersData, loading: membersLoading, error: membersError }] = useMutation(
     CREATE_TEAM_MEMBERS,
@@ -26,7 +26,13 @@ const CreateMembers = () => {
     }
   }, [teamId]);
 
-  console.log(membersData, membersLoading, serverError, teamData, ctx);
+
+  // TODO: redirect user to team page after creating team
+  if (!membersLoading && membersData?.createTeamUsers?.createTeamUsers?.length) {
+    console.log('redirect');
+
+    router.push(`/teams/${props.id}`);
+  }
 
   const handleInputChange = (index, event, handleChange) => {
     handleChange(event);
@@ -92,13 +98,11 @@ const CreateMembers = () => {
                   initialValues={inputFields}
                   validate={() => validate(inputFields)}
                   onSubmit={(values, { setSubmitting }) => {
-                    // return;
                     createTeamMembers({ variables: { input: inputFields } });
                     setSubmitting(false);
                   }}
                 >
                   {({ errors, touched, handleSubmit, isSubmitting, values, handleBlur, handleChange }) => {
-                    console.log('errors', errors);
                     const disabledState =
                       !!errors.firstName || !!errors.lastName || !!errors.email;
                       const showOnlyServerErr = !errors.firstName && !errors.lastName && !errors.email;
@@ -147,7 +151,7 @@ const CreateMembers = () => {
                                     <p className="control is-expanded has-icons-left has-icons-right">
                                       <input
                                         name="lastName"
-                                        className="input is-success"
+                                        className="input"
                                         type="text"
                                         placeholder="Last Name"
                                         onBlur={handleBlur}
@@ -169,7 +173,7 @@ const CreateMembers = () => {
                                     <p className="control is-expanded has-icons-left has-icons-right">
                                       <input
                                         name="email"
-                                        className="input is-success"
+                                        className="input"
                                         type="email"
                                         placeholder="Email Address"
                                         onBlur={handleBlur}
@@ -177,12 +181,7 @@ const CreateMembers = () => {
                                         value={field.email}
                                         required
                                       />
-                                      <input
-                                        name="team"
-                                        className="input is-success"
-                                        type="hidden"
-                                        value={field.team}
-                                      />
+                                      <input name="team" className="input" type="hidden" value={field.team} />
                                       <span className="icon is-small is-left">
                                         <i className="fas fa-envelope"></i>
                                       </span>
@@ -231,7 +230,7 @@ const CreateMembers = () => {
                             <div className="field">
                               <div className="control has-text-right">
                                 <button
-                                  disabled={isSubmitting || disabledState}
+                                  disabled={isSubmitting || disabledState || membersLoading}
                                   type="submit"
                                   className="button has-text-white has-text-weight-bold theme-color-bg m-r-1 no-border"
                                 >
@@ -273,5 +272,13 @@ const GET_TEAM = gql`
     }
   }
 `;
+
+export async function getServerSideProps(ctx) {
+  return {
+    props: {
+      id: ctx.query.id,
+    },
+  };
+}
 
 export default CreateMembers;

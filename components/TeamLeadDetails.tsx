@@ -1,13 +1,24 @@
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import format from 'date-fns/format';
 
-const TeamLeadDetails = ({ lead }: any) => {
+import ManageTeamLeadModal from './team/ManageTeamLeadModal';
+
+const TeamLeadDetails = ({ lead, user }: any) => {
+  const [showModal, setShowModal] = useState(false);
+  const renderModal = () => {
+    return <ManageTeamLeadModal user={user} showModal={showModal} toggleModal={toggleModal} />;
+  };
+
+  const toggleModal = (val: boolean) => {
+    setShowModal(val);
+  };
+
   return (
     <Fragment>
       <section className="section">
         <div className="container has-text-centered">
           <div className="table-container notification">
-            <table className="table is-fullwidth is-striped bg-transparent">
+            <table className="table is-fullwidth bg-transparent">
               <caption>
                 <h3 className="subtitle is-3 has-text-weight-bold align-left m-b-1">Current Team Lead</h3>
               </caption>
@@ -38,8 +49,8 @@ const TeamLeadDetails = ({ lead }: any) => {
                   <Fragment>
                     <tr>
                       <th>1</th>
-                      <td>{lead.firstName}</td>
-                      <td>{lead.lastName}</td>
+                      <td>{user.firstName}</td>
+                      <td>{user.lastName}</td>
                       <td>{format(new Date(lead.start), 'E, dd MMM. yyyy')}</td>
                       <td>{format(new Date(lead.stop), 'E, dd MMM. yyyy')}</td>
                       <td>
@@ -52,7 +63,7 @@ const TeamLeadDetails = ({ lead }: any) => {
                 ) : (
                   <Fragment>
                     <tr>
-                      <td>No team lead to show</td>
+                      <td style={{ width: '10rem' }}>No team lead.</td>
                     </tr>
                   </Fragment>
                 )}
@@ -60,9 +71,12 @@ const TeamLeadDetails = ({ lead }: any) => {
             </table>
           </div>
           <div className="has-text-right">
-            <button className="button">Manage Team Lead</button>
+            <button className="button" onClick={() => toggleModal(true)}>
+              Manage Team Lead
+            </button>
           </div>
         </div>
+        {showModal && renderModal()}
       </section>
     </Fragment>
   );

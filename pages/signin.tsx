@@ -1,25 +1,24 @@
 import { Fragment } from 'react';
-import Link from "next/link";
+import Link from 'next/link';
 import { Formik, Field } from 'formik';
 import classnames from 'classnames';
-import { useRouter } from 'next/router';
+import { gql } from 'apollo-boost';
+import { useLazyQuery } from '@apollo/react-hooks';
 
 import Header from '../components/Header';
 import { signinSchema, initialValues } from '../validation/signin';
-import { gql } from 'apollo-boost';
-import { useLazyQuery } from '@apollo/react-hooks';
+
 import errorMessages from '../errors';
 
 const SignIn = () => {
   const [loginUser, { called, loading, data, error }] = useLazyQuery(SIGN_IN);
   const { code }: { [key: string]: string } = error?.graphQLErrors?.[0].extensions || {};
-  const router = useRouter();
   const dynamicClasses = classnames({ 'is-loading': called && loading });
   const userToken = data?.login?.token;
-  
-  if (data?.login?.token) {
+
+  if (userToken) {
     localStorage.setItem('token', userToken);
-    router.push('/view-team');
+    window.location.href = '/home';
   }
 
   return (

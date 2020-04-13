@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Header from "../components/Header";
 
-const HomePage = () => {
+const Index = () => {
   return (
     <div>
       <Header />
@@ -27,4 +27,4 @@ const HomePage = () => {
   );
 }
 
-export default HomePage;
+export default Index;

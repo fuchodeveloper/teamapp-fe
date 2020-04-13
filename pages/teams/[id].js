@@ -1,28 +1,19 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect, useContext } from 'react';
 import { gql } from 'apollo-boost';
+import { useQuery } from '@apollo/react-hooks';
+import Skeleton from 'react-loading-skeleton';
+import Link from 'next/link';
 
 import Header from '~/components/Header';
 import TeamDetails from '~/components/TeamDetails';
 import TeamLeadDetails from '~/components/TeamLeadDetails';
 import { withContext, appContext } from '~/utils/appContext';
-import Link from 'next/link';
-import { useContext } from 'react';
-import { useRouter } from 'next/router';
-import { useQuery } from '@apollo/react-hooks';
-import Skeleton from 'react-loading-skeleton';
 
-const ViewTeam = ({ contextProps }) => {
-  const router = useRouter();
-  // const { id } = router.query || '';
-
-  const [isTeamEmpty, setIsTeamEmpty] = useState(false);
+const ViewTeam = (props) => {
   const { data: teamData, loading: teamLoading, error: teamError } = useQuery(GET_TEAM, {
-    variables: { id: router?.query?.id },
+    variables: { id: props.id },
   });
 
-  const ctx = useContext(appContext);
-
-  
   const loadingContainer = (
     <Fragment>
       <Header />
@@ -32,13 +23,13 @@ const ViewTeam = ({ contextProps }) => {
       </section>
     </Fragment>
   );
-  
+
   if (teamLoading) return loadingContainer;
-  
+
   if (teamError) return <div>An unexpected error occurred!</div>;
-  
-  console.log('teamData', teamData, 'teamLoading', teamLoading, 'teamError', teamError, router?.query?.id);
+
   const { team } = teamData || {};
+
   return (
     <Fragment>
       <Header />
@@ -65,7 +56,13 @@ const ViewTeam = ({ contextProps }) => {
             </div>
           </nav>
 
-          {isTeamEmpty ? (
+          {team?.members?.length ? (
+            <>
+              <TeamLeadDetails lead={team?.teamLead?.lead} user={team?.teamLead?.user} />
+
+              <TeamDetails members={team?.members} />
+            </>
+          ) : (
             <section className="section">
               <div className="container has-text-centered">
                 <div className="flex-center m-b-3">
@@ -73,17 +70,11 @@ const ViewTeam = ({ contextProps }) => {
                     <img src="/images/empty.png" />
                   </figure>
                 </div>
-                <Link href={`/teams/${router?.query?.id}/create-members`}>
+                <Link href={`/teams/${props.id}/create-members`}>
                   <a className="button theme-color-bg has-text-white has-text-weight-bold">Create Team Members</a>
                 </Link>
               </div>
             </section>
-          ) : (
-            <>
-              <TeamLeadDetails lead={team?.lead} />
-
-              <TeamDetails members={team?.members} />
-            </>
           )}
         </div>
       </section>
@@ -99,10 +90,20 @@ const GET_TEAM = gql`
       duties
       creator
       uniqueId
-      lead {
-        id
-        start
-        stop
+      teamLead {
+        lead {
+          id
+          teamUniqueId
+          start
+          stop
+        }
+        user {
+          id
+          firstName
+          lastName
+          email
+          team
+        }
       }
       members {
         id
@@ -115,4 +116,12 @@ const GET_TEAM = gql`
   }
 `;
 
-export default withContext(ViewTeam);
+export async function getServerSideProps(ctx) {
+  return {
+    props: {
+      id: ctx.query.id,
+    },
+  };
+}
+
+export default ViewTeam;

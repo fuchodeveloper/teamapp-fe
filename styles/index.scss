@@ -1,9 +1,10 @@
 // global
-@import "../node_modules/bulma/bulma.sass";
-@import "../node_modules/@fortawesome/fontawesome-free/css/all.css";
-@import "./common.scss";
+@import '../node_modules/bulma/bulma.sass';
+@import '../node_modules/@fortawesome/fontawesome-free/css/all.css';
+@import './common.scss';
 
 // individual pages
-@import "./home-page.scss";
-@import "./signup.scss";
-@import "./header.scss";
+@import './index-page.scss';
+@import './signup.scss';
+@import './header.scss';
+@import './team-global.scss';

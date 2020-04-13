@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import { client } from '../client';
 import '../node_modules/@fortawesome/fontawesome-free/js/all';
 import '../styles/index.scss';
+import 'react-datepicker/dist/react-datepicker.css';
 import AuthProvider from '../components/AuthProvider';
 
 export default function MyApp({ Component, pageProps }) {
