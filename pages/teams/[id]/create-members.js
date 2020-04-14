@@ -26,7 +26,6 @@ const CreateMembers = (props) => {
     }
   }, [teamId]);
 
-
   // TODO: redirect user to team page after creating team
   if (!membersLoading && membersData?.createTeamUsers?.createTeamUsers?.length) {
     console.log('redirect');
@@ -103,9 +102,8 @@ const CreateMembers = (props) => {
                   }}
                 >
                   {({ errors, touched, handleSubmit, isSubmitting, values, handleBlur, handleChange }) => {
-                    const disabledState =
-                      !!errors.firstName || !!errors.lastName || !!errors.email;
-                      const showOnlyServerErr = !errors.firstName && !errors.lastName && !errors.email;
+                    const disabledState = !!errors.firstName || !!errors.lastName || !!errors.email;
+                    const showOnlyServerErr = !errors.firstName && !errors.lastName && !errors.email;
 
                     return (
                       <form onSubmit={handleSubmit}>

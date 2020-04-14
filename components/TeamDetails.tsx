@@ -1,6 +1,6 @@
-import { Fragment } from "react"
+import { Fragment } from 'react';
 
-const TeamDetails = ({ members }: { members: { id: string, length: number, map: Function } }) => {
+const TeamDetails = ({ members }: { members: { id: string; length: number; map: Function } }) => {
   return (
     <Fragment>
       <section className="section">
@@ -30,15 +30,16 @@ const TeamDetails = ({ members }: { members: { id: string, length: number, map: 
                 {members?.length ? (
                   <Fragment>
                     {members.map(
-                      (member: { id: string; firstName: string; lastName: string; start: string, email: string }, index: number) => {
+                      (
+                        member: { id: string; firstName: string; lastName: string; start: string; email: string },
+                        index: number,
+                      ) => {
                         return (
                           <tr key={member.id}>
                             <th>{index + 1}</th>
                             <td>{member.firstName}</td>
                             <td>{member.lastName}</td>
-                            <td>
-                              {member.email}
-                            </td>
+                            <td>{member.email}</td>
                           </tr>
                         );
                       },
@@ -61,6 +62,6 @@ const TeamDetails = ({ members }: { members: { id: string, length: number, map: 
       </section>
     </Fragment>
   );
-}
+};
 
 export default TeamDetails;
