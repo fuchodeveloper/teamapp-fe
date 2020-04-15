@@ -3,10 +3,10 @@ import format from 'date-fns/format';
 
 import ManageTeamLeadModal from './team/ManageTeamLeadModal';
 
-const TeamLeadDetails = ({ lead, user }: any) => {
+const TeamLeadDetails = ({ lead, user, members }: any) => {
   const [showModal, setShowModal] = useState(false);
   const renderModal = () => {
-    return <ManageTeamLeadModal user={user} showModal={showModal} toggleModal={toggleModal} />;
+    return <ManageTeamLeadModal user={user} showModal={showModal} members={members} toggleModal={toggleModal} />;
   };
 
   const toggleModal = (val: boolean) => {
