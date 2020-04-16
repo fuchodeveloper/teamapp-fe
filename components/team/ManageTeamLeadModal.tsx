@@ -15,6 +15,10 @@ interface Props {
   };
 }
 
+interface Error {
+  name?: string;
+}
+
 const ManageTeamLeadModal = (props: Props) => {
   const showModalClass = classnames({ 'is-active': props.showModal });
 
@@ -24,7 +28,7 @@ const ManageTeamLeadModal = (props: Props) => {
       <Formik
         initialValues={{ name: '', start: '', stop: '' }}
         validate={(values) => {
-          const errors: any = {};
+          const errors: Error = {};
           if (!values.name) {
             errors.name = 'Required';
           }
