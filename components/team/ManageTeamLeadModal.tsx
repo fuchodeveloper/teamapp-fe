@@ -1,10 +1,16 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useContext } from 'react';
 import classnames from 'classnames';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
 import { addDays } from 'date-fns';
+import { gql } from 'apollo-boost';
+import { useMutation } from '@apollo/react-hooks';
+
+import { manageTeamLeadSchema } from '~/validation/team';
+import { appContext } from '~/utils/appContext';
 
 interface Props {
+  uniqueId: string;
   showModal: boolean;
   toggleModal: Function;
   members: Array<any>;
@@ -19,30 +25,43 @@ interface Error {
   name?: string;
 }
 
+/**
+ * create or update a team lead
+ * @param props value from parent
+ */
 const ManageTeamLeadModal = (props: Props) => {
+  const ctx = useContext(appContext);
+  const [createOrUpdateTeamLead, { data: teamLeadData, loading: teamLeadLoading, error: teamLeadError }] = useMutation(
+    MANAGE_TEAMLEAD,
+  );
+
+  console.log('teamLeadData', teamLeadData, 'teamLeadError', teamLeadError);
+  
   const showModalClass = classnames({ 'is-active': props.showModal });
+  const ctxProps: any = ctx && { ...ctx };
 
   return (
     <div className={`modal ${showModalClass}`}>
       <div className="modal-background" onClick={() => props.toggleModal(false)}></div>
       <Formik
         initialValues={{ name: '', start: '', stop: '' }}
-        validate={(values) => {
-          const errors: Error = {};
-          if (!values.name) {
-            errors.name = 'Required';
-          }
-          return errors;
-        }}
+        validationSchema={manageTeamLeadSchema}
         onSubmit={(values, { setSubmitting }) => {
-          console.log('values', values);
+          const nameArr = values?.name?.split('~');
 
+          const request = {
+            userId: nameArr[1],
+            start: values.start,
+            stop: values.stop,
+            creator: ctxProps?.user?.id,
+            teamUniqueId: props?.uniqueId,
+          };
+          createOrUpdateTeamLead({ variables: { input: request } });
           setSubmitting(false);
         }}
       >
         {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setFieldValue }) => {
           console.log('error', errors);
-
           return (
             <form onSubmit={handleSubmit}>
               <div className="modal-card">
@@ -62,13 +81,18 @@ const ManageTeamLeadModal = (props: Props) => {
                           onBlur={handleBlur}
                           required
                         >
-                          <option value="" disabled>-- Select Name --</option>
-                          {props?.members?.map((member: any) => (
-                            <option
-                              key={member.id}
-                              value={`${member.firstName} ${member.lastName}`}
-                            >{`${member.firstName} ${member.lastName}`}</option>
-                          ))}
+                          <option value="" disabled>
+                            -- Select Name --
+                          </option>
+                          {props?.members?.map((member: any) => {
+                            return (
+                              <option
+                                key={member.id}
+                                value={`${member.firstName} ${member.lastName}~${member.id}`}
+                                label={`${member.firstName} ${member.lastName}`}
+                              >{`${member.firstName} ${member.lastName}`}</option>
+                            );
+                          })}
                         </select>
                         {errors.name && touched.name ? <span className="help is-danger">{errors.name}</span> : <br />}
                       </span>
@@ -97,6 +121,11 @@ const ManageTeamLeadModal = (props: Props) => {
                           <span className="icon is-small is-left">
                             <i className="fas fa-calendar" />
                           </span>
+                          {errors.start && touched.start ? (
+                            <span className="help is-danger">{errors.start}</span>
+                          ) : (
+                            <br />
+                          )}
                         </div>
                       </div>
                       <div className="field">
@@ -116,6 +145,7 @@ const ManageTeamLeadModal = (props: Props) => {
                           <span className="icon is-small is-left">
                             <i className="fas fa-calendar" />
                           </span>
+                          {errors.stop && touched.stop ? <span className="help is-danger">{errors.stop}</span> : <br />}
                         </div>
                       </div>
                     </div>
@@ -137,5 +167,18 @@ const ManageTeamLeadModal = (props: Props) => {
     </div>
   );
 };
+
+const MANAGE_TEAMLEAD = gql`
+  mutation createTeamLead($input: CreateTeamLeadInput!) {
+    createTeamLead(input: $input) {
+      id
+      teamUniqueId
+      creator
+      start
+      stop
+      userId
+    }
+  }
+`;
 
 export default ManageTeamLeadModal;

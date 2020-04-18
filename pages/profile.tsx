@@ -6,12 +6,16 @@ import Skeleton from 'react-loading-skeleton';
 import Header from '~/components/Header';
 import { withContext, appContext } from '~/utils/appContext';
 import { authUser } from '~/components/interfaces/authUser';
+import Link from 'next/link';
 
-const Home = (context: any) => {
+const Profile = (context: any) => {
   const ctx = useContext(appContext);
   const { user, authenticated }: any = ctx;
 
   const { data: teamData, loading: teamLoading, error: teamError } = useQuery(GET_TEAM, {
+    variables: { id: user?.id || '' },
+  });
+  const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {
     variables: { id: user?.id || '' },
   });
 
@@ -40,7 +44,8 @@ const Home = (context: any) => {
 
   if (teamError) return <div>An unexpected error occurred!</div>;
 
-  console.log('teamData', teamData, 'teamLoading', teamLoading, 'teamError', teamError, user);
+  // console.log('teamData', teamData, 'teamLoading', teamLoading, 'teamError', teamError, user);
+  console.log('userData', userData, 'userLoading', userLoading, 'userError', userError);
   const { team } = teamData || {};
 
   return (
@@ -56,9 +61,14 @@ const Home = (context: any) => {
                 </div>
                 <hr />
                 <div>
-                  <p>Name: John Doe</p>
-                  <p>Email: john@gmail.com</p>
+                  <p>
+                    <strong>Name:</strong> {`${userData?.user?.firstName} ${userData?.user?.lastName}`}
+                  </p>
+                  <p>
+                    <strong>Email:</strong> {`${userData?.user?.email}`}
+                  </p>
                 </div>
+                <br />
                 <button className="button has-text-weight-bold">Manage Details</button>
               </div>
             </div>
@@ -70,14 +80,21 @@ const Home = (context: any) => {
                 </div>
                 <hr />
                 <div>
-                  <p>Team Name: {team?.name || 'No team created'}</p>
+                  <p>
+                    <strong>Team Name:</strong> {team?.name || 'No team created'}
+                  </p>
                 </div>
                 <br />
                 <div className="buttons">
-                  <button className="button has-text-white has-text-weight-bold theme-color-bg no-border">
-                    Create Team
-                  </button>
-                  <button className="button has-text-weight-bold">Manage Team</button>
+                  {team?.id ? (
+                    <Link href={`/teams/${team?.uniqueId}`}>
+                      <a className="button has-text-weight-bold">View Team</a>
+                    </Link>
+                  ) : (
+                    <Link href="/create-team">
+                      <a className="button has-text-white has-text-weight-bold theme-color-bg no-border">Create Team</a>
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
@@ -98,4 +115,17 @@ const GET_TEAM = gql`
   }
 `;
 
-export default Home;
+const GET_USER = gql`
+  query User($id: ID!) {
+    user(id: $id) {
+      firstName
+      lastName
+      username
+      team
+      role
+      email
+    }
+  }
+`;
+
+export default Profile;

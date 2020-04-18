@@ -5,6 +5,12 @@ export const teamSchema = object().shape({
   duties: string().max(3000, 'Too long').required('Duties field is required'),
 });
 
+export const manageTeamLeadSchema = object().shape({
+  name: string().required('Name is required'),
+  start: string().required('Start date is required'),
+  stop: string().required('Stop date is required'),
+});
+
 export const teamMembersInitialValues = [{ firstName: '', lastName: '', email: '' }];
 
 export const initialValues = { name: '', duties: '' };

@@ -40,10 +40,10 @@ const Header = ({ user, authenticated, logout }: authUser) => {
               {/* <a className="navbar-item is-active">Home</a> */}
               {authenticated ? (
                 <div className="navbar-item has-dropdown is-hoverable">
-                  <a className="navbar-link">My Profile</a>
+                  <a className="navbar-link">Menu</a>
                   <div className="navbar-dropdown">
-                    <Link href="/home">
-                      <a className="navbar-item">Home</a>
+                    <Link href="/profile">
+                      <a className="navbar-item">Profile</a>
                     </Link>
                     {!teamId && (
                       <Link href="/create-team">

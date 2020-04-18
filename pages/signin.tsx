@@ -18,7 +18,7 @@ const SignIn = () => {
 
   if (userToken) {
     localStorage.setItem('token', userToken);
-    window.location.href = '/home';
+    window.location.href = '/profile';
   }
 
   return (
