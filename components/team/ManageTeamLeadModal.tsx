@@ -1,13 +1,12 @@
-import { Fragment, useState, useContext } from 'react';
-import classnames from 'classnames';
-import DatePicker from 'react-datepicker';
-import { Formik, Field } from 'formik';
-import { addDays } from 'date-fns';
-import { gql } from 'apollo-boost';
 import { useMutation } from '@apollo/react-hooks';
-
-import { manageTeamLeadSchema } from '~/validation/team';
+import { gql } from 'apollo-boost';
+import classnames from 'classnames';
+import { addDays } from 'date-fns';
+import { Formik } from 'formik';
+import { useContext } from 'react';
+import DatePicker from 'react-datepicker';
 import { appContext } from '~/utils/appContext';
+import { manageTeamLeadSchema } from '~/validation/team';
 
 interface Props {
   uniqueId: string;
@@ -36,7 +35,7 @@ const ManageTeamLeadModal = (props: Props) => {
   );
 
   console.log('teamLeadData', teamLeadData, 'teamLeadError', teamLeadError);
-  
+
   const showModalClass = classnames({ 'is-active': props.showModal });
   const ctxProps: any = ctx && { ...ctx };
 
@@ -74,13 +73,7 @@ const ManageTeamLeadModal = (props: Props) => {
                     <label className="label">Name</label>
                     <div className="control has-icons-left is-expanded">
                       <span className="select is-fullwidth">
-                        <select
-                          name="name"
-                          value={values.name}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          required
-                        >
+                        <select name="name" value={values.name} onChange={handleChange} onBlur={handleBlur} required>
                           <option value="" disabled>
                             -- Select Name --
                           </option>

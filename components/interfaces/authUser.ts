@@ -1,4 +1,4 @@
-export interface authUser {
+export type authUser = {
   user: {
     id: string;
   };

@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
 import jwt from 'jsonwebtoken';
-
+import React, { useEffect, useState } from 'react';
 import { Provider } from '../utils/appContext';
 
 const AuthProvider = (props: any) => {
@@ -12,7 +11,6 @@ const AuthProvider = (props: any) => {
 
   const logout = () => {
     localStorage.removeItem('token');
-    localStorage.removeItem('tid');
     setUserPayload({ user: {}, authenticated: false, logout: () => {} });
   };
 

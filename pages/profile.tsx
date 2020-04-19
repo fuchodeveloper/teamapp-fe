@@ -1,12 +1,10 @@
-import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
-import { useEffect, Fragment, useContext } from 'react';
-import Skeleton from 'react-loading-skeleton';
-
-import Header from '~/components/Header';
-import { withContext, appContext } from '~/utils/appContext';
-import { authUser } from '~/components/interfaces/authUser';
+import { gql } from 'apollo-boost';
 import Link from 'next/link';
+import { Fragment, useContext } from 'react';
+import Skeleton from 'react-loading-skeleton';
+import Header from '~/components/Header';
+import { appContext } from '~/utils/appContext';
 
 const Profile = (context: any) => {
   const ctx = useContext(appContext);
@@ -17,12 +15,6 @@ const Profile = (context: any) => {
   });
   const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {
     variables: { id: user?.id || '' },
-  });
-
-  useEffect(() => {
-    if (teamData?.team?.id) {
-      localStorage.setItem('tid', teamData?.team?.uniqueId);
-    }
   });
 
   const loadingContainer = (

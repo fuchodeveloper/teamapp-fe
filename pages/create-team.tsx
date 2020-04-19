@@ -18,11 +18,6 @@ const CreateTeam: NextPage = (props: any) => {
   });
   const teamId = teamData?.createTeam?.uniqueId;
 
-  if (teamId) {
-    router.push(`/teams/${teamId}`);
-    localStorage.setItem('tid', teamId);
-  }
-
   return (
     <Fragment>
       <Header />

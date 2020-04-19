@@ -1,20 +1,11 @@
-import React, { Fragment, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-
+import React from 'react';
 import { withContext } from '~/utils/appContext';
 import { authUser } from './interfaces/authUser';
 
 const Header = ({ user, authenticated, logout }: authUser) => {
-  const [teamId, setTeamId] = useState('');
   const router = useRouter();
-
-  useEffect(() => {
-    const tid = localStorage.getItem('tid') || '';
-    if (tid && typeof tid === 'string') {
-      setTeamId(tid);
-    }
-  }, []);
 
   const logoutHandler = (): any => {
     logout();
@@ -45,16 +36,6 @@ const Header = ({ user, authenticated, logout }: authUser) => {
                     <Link href="/profile">
                       <a className="navbar-item">Profile</a>
                     </Link>
-                    {!teamId && (
-                      <Link href="/create-team">
-                        <a className="navbar-item">Create Team</a>
-                      </Link>
-                    )}
-                    {teamId && (
-                      <Link href={`/teams/${teamId}`}>
-                        <a className="navbar-item">View Team</a>
-                      </Link>
-                    )}
 
                     <hr className="navbar-divider" />
                     <a onClick={() => logoutHandler()} className="navbar-item has-text-danger">

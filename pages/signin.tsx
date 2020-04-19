@@ -1,14 +1,12 @@
-import { Fragment } from 'react';
-import Link from 'next/link';
-import { Formik, Field } from 'formik';
-import classnames from 'classnames';
-import { gql } from 'apollo-boost';
 import { useLazyQuery } from '@apollo/react-hooks';
-
+import { gql } from 'apollo-boost';
+import classnames from 'classnames';
+import { Field, Formik } from 'formik';
+import Link from 'next/link';
+import { Fragment } from 'react';
 import Header from '../components/Header';
-import { signinSchema, initialValues } from '../validation/signin';
-
 import errorMessages from '../errors';
+import { initialValues, signinSchema } from '../validation/signin';
 
 const SignIn = () => {
   const [loginUser, { called, loading, data, error }] = useLazyQuery(SIGN_IN);

@@ -1,14 +1,13 @@
-import { Fragment } from 'react';
-import Link from "next/link";
-import { useRouter } from 'next/router';
-import { Formik, Field } from 'formik';
-import { gql } from 'apollo-boost';
 import { useMutation } from '@apollo/react-hooks';
+import { gql } from 'apollo-boost';
 import classnames from 'classnames';
-
+import { Field, Formik } from 'formik';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { Fragment } from 'react';
 import Header from '../components/Header';
-import { signupSchema, initialValues } from '../validation/signup';
 import errorMessages from '../errors';
+import { initialValues, signupSchema } from '../validation/signup';
 
 const SignUp = () => {
   const [createUsers, { data, loading, error }] = useMutation(SIGN_UP);
@@ -45,8 +44,10 @@ const SignUp = () => {
                   }}
                 >
                   {({ errors, touched, handleSubmit, isSubmitting }) => {
-                    const disabledState = !!errors.firstName || !!errors.lastName || !!errors.email || !!errors.password;
-                    const showOnlyServerErr = !errors.firstName && !errors.lastName && !errors.password && !errors.email;
+                    const disabledState =
+                      !!errors.firstName || !!errors.lastName || !!errors.email || !!errors.password;
+                    const showOnlyServerErr =
+                      !errors.firstName && !errors.lastName && !errors.password && !errors.email;
                     return (
                       <form onSubmit={handleSubmit}>
                         <div className="field is-horizontal m-b-2">
@@ -65,7 +66,9 @@ const SignUp = () => {
                               </div>
                               {errors.firstName && touched.firstName ? (
                                 <span className="help is-danger">{errors.firstName}</span>
-                              ) : <br />}
+                              ) : (
+                                <br />
+                              )}
                             </div>
                           </div>
                         </div>
@@ -86,7 +89,9 @@ const SignUp = () => {
                               </div>
                               {errors.lastName && touched.lastName ? (
                                 <span className="help is-danger">{errors.lastName}</span>
-                              ) : <br />}
+                              ) : (
+                                <br />
+                              )}
                             </div>
                           </div>
                         </div>
@@ -107,7 +112,9 @@ const SignUp = () => {
                               </div>
                               {errors.email && touched.email ? (
                                 <span className="help is-danger">{errors.email}</span>
-                              ) : <br />}
+                              ) : (
+                                <br />
+                              )}
                               {code === 'DUPLICATE_EMAIL' && showOnlyServerErr && (
                                 <span className="help is-danger">{errorMessages.DUPLICATE_EMAIL}</span>
                               )}
@@ -129,16 +136,18 @@ const SignUp = () => {
                                   </span>
                                 </p>
                               </div>
-                              {errors.password && touched.password ? (
-                                <span className="help is-danger">{errors.password}</span>
-                              ) : <br />}
-                              {code === 'INTERNAL_SERVER_ERROR' && showOnlyServerErr && (
-                                <span className="help is-danger">{errorMessages.INTERNAL_SERVER_ERROR}</span>
-                              )}
                               {!errors.password && !touched.password && (
                                 <span className="help">
                                   Use 7 - 15 characters, at least one numeric digit and a special character
                                 </span>
+                              )}
+                              {errors.password && touched.password ? (
+                                <span className="help is-danger">{errors.password}</span>
+                              ) : (
+                                <br />
+                              )}
+                              {code === 'INTERNAL_SERVER_ERROR' && showOnlyServerErr && (
+                                <span className="help is-danger">{errorMessages.INTERNAL_SERVER_ERROR}</span>
                               )}
                             </div>
                           </div>
@@ -169,7 +178,6 @@ const SignUp = () => {
                         </div>
                       </form>
                     );
-                    
                   }}
                 </Formik>
               </div>
@@ -179,7 +187,7 @@ const SignUp = () => {
       </section>
     </Fragment>
   );
-}
+};
 
 const SIGN_UP = gql`
   mutation createUsers($input: [UserInput]) {
