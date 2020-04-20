@@ -18,6 +18,8 @@ const AuthProvider = (props: any) => {
     const token = localStorage.getItem('token');
     let decodedToken: string;
     if (token) {
+      console.log('token exists');
+      
       const decoded: string | { [key: string]: string } | null | any = jwt.decode(token, { complete: true });
       decodedToken = decoded?.payload;
       setUserPayload({
@@ -25,6 +27,9 @@ const AuthProvider = (props: any) => {
         authenticated: true,
         logout: logout,
       });
+    } else {
+      console.log('no token');
+      
     }
     return () => undefined;
   }, []);

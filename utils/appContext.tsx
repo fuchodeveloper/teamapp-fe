@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import Router from 'next/router';
 
 export const appContext = React.createContext({
   authenticated: false,
@@ -8,6 +9,15 @@ export const appContext = React.createContext({
 
 export const withContext = (Component: any) => {
   return (props: JSX.IntrinsicAttributes) => {
+    useEffect(() => {
+      const token = localStorage.getItem('token');
+      let decodedToken: string;
+      if (!token) {
+        Router.push('/signin');
+      }
+      return undefined;
+    }, []);
+
     return (
       <appContext.Consumer>
         {(globalState) => {

@@ -129,4 +129,4 @@ export async function getServerSideProps(ctx) {
   };
 }
 
-export default ViewTeam;
+export default withContext(ViewTeam);
