@@ -12,9 +12,9 @@ export const withContext = (Component: any) => {
     useEffect(() => {
       const token = localStorage.getItem('token');
       let decodedToken: string;
-      if (!token) {
-        Router.push('/signin');
-      }
+      // if (!token) {
+      //   Router.push('/signin');
+      // }
       return undefined;
     }, []);
 

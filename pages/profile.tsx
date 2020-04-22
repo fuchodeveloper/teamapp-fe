@@ -3,12 +3,15 @@ import { gql } from 'apollo-boost';
 import Link from 'next/link';
 import { Fragment, useContext } from 'react';
 import Skeleton from 'react-loading-skeleton';
+import { GetServerSideProps } from 'next';
+import nextCookie from 'next-cookies';
 import Header from '~/components/Header';
 import { appContext } from '~/utils/appContext';
+import { auth, withAuthSync } from '~/utils/auth';
 
-const Profile = (context: any) => {
+const Profile = (props: any) => {
   const ctx = useContext(appContext);
-  const { user, authenticated }: any = ctx;
+  const { user, authenticated }: any = props;
 
   const { data: teamData, loading: teamLoading, error: teamError } = useQuery(GET_TEAM, {
     variables: { id: user?.id || '' },
@@ -16,6 +19,8 @@ const Profile = (context: any) => {
   const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {
     variables: { id: user?.id || '' },
   });
+
+  console.log('profile:props', props, 'userData', userError);
 
   const loadingContainer = (
     <Fragment>
@@ -37,7 +42,7 @@ const Profile = (context: any) => {
   if (teamError) return <div>An unexpected error occurred!</div>;
 
   // console.log('teamData', teamData, 'teamLoading', teamLoading, 'teamError', teamError, user);
-  console.log('userData', userData, 'userLoading', userLoading, 'userError', userError);
+  // console.log('userData', userData, 'userLoading', userLoading, 'userError', userError);
   const { team } = teamData || {};
 
   return (
@@ -120,4 +125,13 @@ const GET_USER = gql`
   }
 `;
 
-export default Profile;
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  // Check user's session
+  const user = auth(ctx) || {};
+
+  return {
+    props: { ...user },
+  };
+};
+
+export default withAuthSync(Profile);

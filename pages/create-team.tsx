@@ -3,12 +3,13 @@ import Link from 'next/link';
 import { Formik, Field } from 'formik';
 import { gql } from 'apollo-boost';
 import { useMutation, useQuery } from '@apollo/react-hooks';
-import { NextPage } from 'next';
+import { NextPage, GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 
 import Header from '../components/Header';
 import { initialValues, teamSchema } from '../validation/team';
 import { withContext } from '../utils/appContext';
+import { withAuthSync, auth } from '~/utils/auth';
 
 const CreateTeam: NextPage = (props: any) => {
   const router = useRouter();
@@ -148,4 +149,13 @@ const GET_USER = gql`
   }
 `;
 
-export default withContext(CreateTeam);
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  // Check user's session
+  const user = auth(ctx) || {};
+
+  return {
+    props: { ...user },
+  };
+};
+
+export default withAuthSync(CreateTeam);

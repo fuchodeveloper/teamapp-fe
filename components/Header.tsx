@@ -9,7 +9,6 @@ const Header = ({ user, authenticated, logout }: authUser) => {
 
   const logoutHandler = (): any => {
     logout();
-    router.push('/');
   };
 
   return (

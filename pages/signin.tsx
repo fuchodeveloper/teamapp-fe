@@ -7,6 +7,8 @@ import { Fragment } from 'react';
 import Header from '../components/Header';
 import errorMessages from '../errors';
 import { initialValues, signinSchema } from '../validation/signin';
+import Router from 'next/router';
+import cookie from 'js-cookie';
 
 const SignIn = () => {
   const [loginUser, { called, loading, data, error }] = useLazyQuery(SIGN_IN);
@@ -16,7 +18,10 @@ const SignIn = () => {
 
   if (userToken) {
     localStorage.setItem('token', userToken);
-    window.location.href = '/profile';
+    cookie.set('token', userToken, { expires: 1 });
+    // cookie.set('signedin', 'true');
+    Router.push('/profile');
+    // window.location.href = '/profile';
   }
 
   return (
