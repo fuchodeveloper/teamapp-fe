@@ -8,7 +8,7 @@ let appUrl = '';
 
 const httpLink = createHttpLink({
   // uri: 'http://localhost:4001/graphql',
-  uri: 'https://teamapp-be.now.sh/graphl',
+  uri: 'https://teamapp-be.now.sh',
   credentials: 'include',
 });
 
