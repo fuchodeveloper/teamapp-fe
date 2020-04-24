@@ -2,31 +2,37 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import classnames from 'classnames';
 import { Field, Formik } from 'formik';
+import { GetServerSideProps } from 'next';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import Router from 'next/router';
 import { Fragment } from 'react';
+import { auth } from '~/utils/auth';
 import Header from '../components/Header';
 import errorMessages from '../errors';
 import { initialValues, signinSchema } from '../validation/signin';
-import Router from 'next/router';
-import cookie from 'js-cookie';
 
-const SignIn = () => {
+const ProfilePage = dynamic(() => import('./profile'));
+
+const SignIn = (props: any) => {
+  console.log('SignIn:props', props);
+
   const [loginUser, { called, loading, data, error }] = useLazyQuery(SIGN_IN);
-  const { code }: { [key: string]: string } = error?.graphQLErrors?.[0].extensions || {};
-  const dynamicClasses = classnames({ 'is-loading': called && loading });
-  const userToken = data?.login?.token;
+  const { code }: { [key: string]: string } = error?.graphQLErrors?.[0]?.extensions || {};
+  const loggedIn = props?.pageProps?.loggedIn;
 
-  if (userToken) {
-    localStorage.setItem('token', userToken);
-    cookie.set('token', userToken, { expires: 1 });
+  const dynamicClasses = classnames({ 'is-loading': called && loading });
+
+  const loginStatus = data?.login?.success;
+
+  if (loginStatus) {
     // cookie.set('signedin', 'true');
     Router.push('/profile');
-    // window.location.href = '/profile';
   }
 
   return (
     <Fragment>
-      <Header />
+      <Header {...props} />
       <section className="hero">
         <div className="hero-body">
           <div className="container">
@@ -148,10 +154,30 @@ const SignIn = () => {
 const SIGN_IN = gql`
   query loginUser($email: String!, $password: String!) {
     login(email: $email, password: $password) {
-      id
-      token
+      success
     }
   }
 `;
 
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  // Check user's session
+  const session = auth(ctx);
+
+  return {
+    props: session,
+  };
+};
+
+// SignIn.getInitialProps = async (ctx: { ctx: any; }) => {
+//   // Check user's session
+//   const token = auth(ctx?.ctx || ctx) || '';
+
+//   console.log('SignIn.getInitialProps:token', token);
+//   return token;
+//   // return {
+//   //   props: { token },
+//   // };
+// };
+
 export default SignIn;
+// export default withAuthSync(SignIn);

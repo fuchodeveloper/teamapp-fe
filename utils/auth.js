@@ -2,31 +2,44 @@ import cookie from 'js-cookie';
 import jwt from 'jsonwebtoken';
 import nextCookie from 'next-cookies';
 import Router from 'next/router';
-import { Component } from 'react';
+import React, { Component } from 'react';
 
 export const auth = (ctx) => {
   const { token } = nextCookie(ctx);
-  let decodedUser;
-  let userPayload;
+  const nonAuthUrls = ['/signin', '/signup'];
 
-  if (ctx.req && !token) {
-    ctx.res.writeHead(302, { Location: '/signin' });
-    ctx.res.end();
-    return;
+  // console.log('ifffffffffff', ctx?.res);
+
+  // if (ctx.req && !token) {
+  //   ctx.res.writeHead(302, { Location: '/signin' });
+  //   ctx.res.finished = true;
+  //   ctx.res.end();
+  //   return {};
+  // }
+
+  // if (!token) {
+  //   Router.push('/signin');
+  // }
+
+  if (token) {
+    let decodedToken;
+    let userPayload = {};
+    const decoded = jwt.decode(token, { complete: true });
+    decodedToken = decoded?.payload;
+    userPayload = {
+      user: decodedToken,
+      authenticated: true,
+      admin: false,
+    };
+
+    return {
+      token,
+      loggedIn: true,
+      ...userPayload,
+    };
   }
 
-  if (!token) {
-    Router.push('/signin');
-  }
-
-  const decoded = jwt.decode(token, { complete: true });
-  decodedUser = decoded?.payload;
-  userPayload = {
-    user: decodedUser,
-    authenticated: true,
-  };
-
-  return {token, ...userPayload};
+  return { loggedIn: false };
 };
 
 export const logout = () => {
@@ -43,8 +56,7 @@ const getDisplayName = (Component) => Component.displayName || Component.name ||
 export const withAuthSync = (WrappedComponent) =>
   class extends Component {
     static displayName = `withAuthSync(${getDisplayName(WrappedComponent)})`;
-    
-    
+
     static async getServerSideProps(ctx) {
       const token = auth(ctx);
 
@@ -76,7 +88,7 @@ export const withAuthSync = (WrappedComponent) =>
     syncLogout(event) {
       if (event.key === 'logout') {
         console.log('logged out from storage!');
-        Router.push('/login');
+        Router.push('/signin');
       }
     }
 

@@ -1,23 +1,9 @@
-import React, { useEffect } from 'react';
-import Router from 'next/router';
+import React from 'react';
 
-export const appContext = React.createContext({
-  authenticated: false,
-  user: {},
-  logout: () => {},
-});
+export const appContext = React.createContext({});
 
 export const withContext = (Component: any) => {
   return (props: JSX.IntrinsicAttributes) => {
-    useEffect(() => {
-      const token = localStorage.getItem('token');
-      let decodedToken: string;
-      // if (!token) {
-      //   Router.push('/signin');
-      // }
-      return undefined;
-    }, []);
-
     return (
       <appContext.Consumer>
         {(globalState) => {

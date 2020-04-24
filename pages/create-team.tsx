@@ -1,27 +1,36 @@
-import { Fragment, useEffect } from 'react';
-import Link from 'next/link';
-import { Formik, Field } from 'formik';
-import { gql } from 'apollo-boost';
 import { useMutation, useQuery } from '@apollo/react-hooks';
-import { NextPage, GetServerSideProps } from 'next';
-import { useRouter } from 'next/router';
-
+import { gql } from 'apollo-boost';
+import { Field, Formik } from 'formik';
+import { GetServerSideProps, NextPage } from 'next';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import Router from 'next/router';
+import { Fragment } from 'react';
+import { authUser } from '~/components/interfaces/authUser';
+import { auth } from '~/utils/auth';
 import Header from '../components/Header';
 import { initialValues, teamSchema } from '../validation/team';
-import { withContext } from '../utils/appContext';
-import { withAuthSync, auth } from '~/utils/auth';
 
-const CreateTeam: NextPage = (props: any) => {
-  const router = useRouter();
+const SigninPage: NextPage = dynamic(() => import('./signin'));
+
+const CreateTeam = ({ pageProps }: authUser) => {
+  const { user, authenticated } = pageProps || {};
+  const loggedIn = pageProps?.loggedIn || false;
   const [createTeam, { data: teamData, loading: teamLoading, error: teamError }] = useMutation(CREATE_TEAM);
   const { data: userData, loading: userLoading, error: userErr } = useQuery(GET_USER, {
-    variables: { id: props?.user?.id || '' },
+    variables: { id: user?.id || '' },
   });
   const teamId = teamData?.createTeam?.uniqueId;
 
+  if (teamId) {
+    Router.push(`/teams/${teamId}`);
+  }
+
+  if (!loggedIn) return <SigninPage />;
+
   return (
     <Fragment>
-      <Header />
+      <Header pageProps={pageProps} />
       <section className="hero">
         <div className="hero-body">
           <div className="container">
@@ -151,11 +160,11 @@ const GET_USER = gql`
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   // Check user's session
-  const user = auth(ctx) || {};
+  const session = auth(ctx) || {};
 
   return {
-    props: { ...user },
+    props: session,
   };
 };
 
-export default withAuthSync(CreateTeam);
+export default CreateTeam;

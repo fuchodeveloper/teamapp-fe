@@ -1,36 +1,42 @@
-import React, { useEffect, useState } from 'react';
 import { ApolloProvider } from '@apollo/react-hooks';
-
+import React from 'react';
+import 'react-datepicker/dist/react-datepicker.css';
 import { client } from '../client';
 import '../node_modules/@fortawesome/fontawesome-free/js/all';
 import '../styles/index.scss';
-import 'react-datepicker/dist/react-datepicker.css';
-import AuthProvider from '../components/AuthProvider';
 
-function MyApp({ Component, pageProps }) {
-  // console.log('dtgsdfg', pageProps);
-  
-  // const { token } = nextCookie(pageProps);
-  // let decodedUser;
-  // let userPayload;
 
-  // if (token) {
-  //   const decoded = jwt.decode(token, { complete: true });
-  //   decodedUser = decoded?.payload;
-  //   userPayload = {
-  //     user: decodedUser,
-  //     authenticated: true,
-  //     logout: logout,
-  //   };
-  // }
-
+function MyApp({ Component, ...pageProps }) {
   return (
-    <AuthProvider>
-      <ApolloProvider client={client}>
-        <Component {...pageProps} />
-      </ApolloProvider>
-    </AuthProvider>
+    <ApolloProvider client={client}>
+      <Component {...pageProps} />
+    </ApolloProvider>
   );
 }
+
+// export const getServerSideProps = async (ctx) => {
+//   // Check user's session
+//   const session = auth(ctx);
+
+//   console.log('MyApp.getServerSideProps:token', session);
+//   return {
+//     props: session,
+//   };
+// };
+
+// MyApp.getInitialProps = async (ctx) => {
+//   //  if (process.browser) {
+//   //    history.go();
+//   //  }
+
+//   // Check user's session
+//   const token = auth(ctx?.ctx || ctx) || '';
+
+//   console.log('MyApp.getInitialProps:token', token);
+//   return token;
+//   // return {
+//   //   props: { token },
+//   // };
+// };
 
 export default MyApp;

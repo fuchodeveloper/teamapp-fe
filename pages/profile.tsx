@@ -1,30 +1,39 @@
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
+import { GetServerSideProps, NextPage } from 'next';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { Fragment, useContext } from 'react';
+import Router from 'next/router';
+import { Fragment, useEffect } from 'react';
 import Skeleton from 'react-loading-skeleton';
-import { GetServerSideProps } from 'next';
-import nextCookie from 'next-cookies';
 import Header from '~/components/Header';
-import { appContext } from '~/utils/appContext';
-import { auth, withAuthSync } from '~/utils/auth';
+import { authUser } from '~/components/interfaces/authUser';
+import { auth } from '~/utils/auth';
 
-const Profile = (props: any) => {
-  const ctx = useContext(appContext);
-  const { user, authenticated }: any = props;
+const SigninPage: NextPage = dynamic(() => import('./signin'));
 
-  const { data: teamData, loading: teamLoading, error: teamError } = useQuery(GET_TEAM, {
-    variables: { id: user?.id || '' },
-  });
+const Profile = ({ pageProps }: authUser) => {
+  const { user, authenticated } = pageProps || {};
+  const loggedIn = pageProps?.loggedIn || false;
+
+  useEffect(() => {
+    if (loggedIn) return; // do nothing if the user is logged in
+    Router.replace('/profile', '/signin', { shallow: true });
+  }, [loggedIn]);
+
+  if (!loggedIn) return <SigninPage />;
+
   const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {
     variables: { id: user?.id || '' },
   });
 
-  console.log('profile:props', props, 'userData', userError);
+  const { data: teamData, loading: teamLoading, error: teamError } = useQuery(GET_TEAM, {
+    variables: { id: user?.id, uniqueId: userData?.user?.team || '' },
+  });
 
   const loadingContainer = (
     <Fragment>
-      <Header />
+      <Header pageProps={pageProps} />
       <section className="section">
         <div className="container">
           <div className="card card-wrapper">
@@ -41,13 +50,11 @@ const Profile = (props: any) => {
 
   if (teamError) return <div>An unexpected error occurred!</div>;
 
-  // console.log('teamData', teamData, 'teamLoading', teamLoading, 'teamError', teamError, user);
-  // console.log('userData', userData, 'userLoading', userLoading, 'userError', userError);
   const { team } = teamData || {};
 
   return (
     <>
-      <Header />
+      <Header pageProps={pageProps} />
       <section className="hero">
         <div className="hero-body">
           <div className="container">
@@ -103,8 +110,8 @@ const Profile = (props: any) => {
 };
 
 const GET_TEAM = gql`
-  query Team($id: ID!) {
-    team(id: $id) {
+  query Team($id: ID!, $uniqueId: String!) {
+    team(id: $id, uniqueId: $uniqueId) {
       id
       name
       uniqueId
@@ -127,11 +134,11 @@ const GET_USER = gql`
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   // Check user's session
-  const user = auth(ctx) || {};
+  const session = auth(ctx);
 
   return {
-    props: { ...user },
+    props: session,
   };
 };
 
-export default withAuthSync(Profile);
+export default Profile;

@@ -1,7 +1,10 @@
 export type authUser = {
-  user: {
-    id: string;
+  pageProps?: {
+    loggedIn: boolean;
+    user: {
+      id: string;
+    };
+    authenticated: boolean;
+    logout: Function;
   };
-  authenticated: boolean;
-  logout: Function;
 };

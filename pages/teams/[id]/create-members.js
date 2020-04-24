@@ -1,16 +1,16 @@
-import { Fragment, useState, useContext, useEffect } from 'react';
-import { Formik } from 'formik';
+import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
-import { useMutation, useLazyQuery } from '@apollo/react-hooks';
-import { useRouter } from 'next/router';
-
+import { Formik } from 'formik';
+import Router from 'next/router';
+import { Fragment, useEffect, useState } from 'react';
 import Header from '~/components/Header';
-import { withContext, appContext } from '~/utils/appContext';
+import { auth } from '~/utils/auth';
 
-const CreateMembers = (props) => {
-  const router = useRouter();
-  const ctx = useContext(appContext);
-  const teamId = props.id;
+const CreateMembers = ({ pageProps }) => {
+  const { id, user, authenticated } = pageProps || {};
+  const loggedIn = pageProps?.loggedIn || false;
+  const teamId = pageProps?.id;
+
   const [inputFields, setInputFields] = useState([{ firstName: '', lastName: '', email: '', team: '' }]);
   const [createTeamMembers, { data: membersData, loading: membersLoading, error: membersError }] = useMutation(
     CREATE_TEAM_MEMBERS,
@@ -22,15 +22,15 @@ const CreateMembers = (props) => {
 
   useEffect(() => {
     if (teamId) {
-      getTeam({ variables: { id: teamId } });
+      getTeam({ variables: { id: user?.id, uniqueId: teamId } });
     }
   }, [teamId]);
 
   // TODO: redirect user to team page after creating team
-  if (!membersLoading && membersData?.createTeamUsers?.createTeamUsers?.length) {
+  if (!membersLoading && membersData?.createTeamUsers?.length > 0) {
     console.log('redirect');
 
-    router.push(`/teams/${props.id}`);
+    Router.push(`/teams/${teamId}`);
   }
 
   const handleInputChange = (index, event, handleChange) => {
@@ -264,18 +264,20 @@ const CREATE_TEAM_MEMBERS = gql`
 `;
 
 const GET_TEAM = gql`
-  query Team($id: ID!) {
-    team(id: $id) {
+  query Team($id: ID!, $uniqueId: String!) {
+    team(id: $id, uniqueId: $uniqueId) {
       id
     }
   }
 `;
 
 export async function getServerSideProps(ctx) {
+  // Check user's session
+  const session = auth(ctx);
+  const id = ctx.query.id;
+
   return {
-    props: {
-      id: ctx.query.id,
-    },
+    props: { id, ...session },
   };
 }
 

@@ -1,17 +1,27 @@
-import React, { Fragment, useState, useEffect, useContext } from 'react';
-import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
-import Skeleton from 'react-loading-skeleton';
+import { gql } from 'apollo-boost';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
-
+import React, { Fragment } from 'react';
+import Skeleton from 'react-loading-skeleton';
 import Header from '~/components/Header';
 import TeamDetails from '~/components/TeamDetails';
 import TeamLeadDetails from '~/components/TeamLeadDetails';
-import { withContext, appContext } from '~/utils/appContext';
+import { auth } from '~/utils/auth';
 
-const ViewTeam = (props) => {
+const SigninPage = dynamic(() => import('../signin'));
+
+const ViewTeam = ({ pageProps }) => {
+  /**
+   * team id represented as `id`
+   */
+  const { teamId, user, authenticated } = pageProps || {};
+  const loggedIn = pageProps?.loggedIn || false;
+
+  if (!loggedIn) return <SigninPage />;
+
   const { data: teamData, loading: teamLoading, error: teamError } = useQuery(GET_TEAM, {
-    variables: { id: props.id },
+    variables: { id: user?.id, uniqueId: teamId },
   });
 
   const loadingContainer = (
@@ -32,21 +42,21 @@ const ViewTeam = (props) => {
 
   return (
     <Fragment>
-      <Header />
+      <Header pageProps={pageProps} />
       <section className="section">
         <div className="container">
           <nav className="level">
             <div className="level-left">
               <div className="level-item">
                 <p className="subtitle is-5">
-                  Team: <strong>{team.name}</strong>
+                  Team: <strong>{team?.name || 'Team not found'}</strong>
                 </p>
               </div>
             </div>
 
             <div className="level-right">
               <p className="level-item">
-                Team ID: &nbsp; <strong>{team.uniqueId}</strong>
+                Team ID: &nbsp; <strong>{team?.uniqueId || 'No id'}</strong>
               </p>
               <p className="level-item">
                 <span className="icon">
@@ -63,23 +73,43 @@ const ViewTeam = (props) => {
                 lead={team?.teamLead?.lead}
                 user={team?.teamLead?.user}
                 members={team?.members}
+                {...pageProps}
               />
 
-              <TeamDetails members={team?.members} />
+              <TeamDetails members={team?.members} {...pageProps} />
             </>
           ) : (
-            <section className="section">
-              <div className="container has-text-centered">
-                <div className="flex-center m-b-3">
-                  <figure className="image has-text-centered">
-                    <img src="/images/empty.png" />
-                  </figure>
-                </div>
-                <Link href={`/teams/${props.id}/create-members`}>
-                  <a className="button theme-color-bg has-text-white has-text-weight-bold">Create Team Members</a>
-                </Link>
-              </div>
-            </section>
+            <>
+              {team?.id ? (
+                <section className="section">
+                  <div className="container has-text-centered">
+                    <div className="flex-center m-b-3">
+                      <figure className="image has-text-centered">
+                        <img src="/images/empty.png" />
+                      </figure>
+                    </div>
+                    <Link href={`/teams/${teamId}/create-members`}>
+                      <a className="button theme-color-bg has-text-white has-text-weight-bold">Create Team Members</a>
+                    </Link>
+                  </div>
+                </section>
+              ) : (
+                <section className="section">
+                  <div className="hero-body">
+                    <div className="container has-text-centered">
+                      <>
+                        <p>
+                          <strong>404 - Team not found.</strong>
+                        </p>
+                        <p>
+                          Go to <a href="/">home</a>
+                        </p>
+                      </>
+                    </div>
+                  </div>
+                </section>
+              )}
+            </>
           )}
         </div>
       </section>
@@ -88,8 +118,8 @@ const ViewTeam = (props) => {
 };
 
 const GET_TEAM = gql`
-  query Team($id: ID!) {
-    team(id: $id) {
+  query Team($id: ID!, $uniqueId: String!) {
+    team(id: $id, uniqueId: $uniqueId) {
       id
       name
       duties
@@ -121,12 +151,14 @@ const GET_TEAM = gql`
   }
 `;
 
-export async function getServerSideProps(ctx) {
-  return {
-    props: {
-      id: ctx.query.id,
-    },
-  };
-}
+export const getServerSideProps = async (ctx) => {
+  // Check user's session
+  const session = auth(ctx);
+  const teamId = ctx.query.id;
 
-export default withContext(ViewTeam);
+  return {
+    props: { teamId, ...session },
+  };
+};
+
+export default ViewTeam;

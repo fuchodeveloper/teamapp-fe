@@ -1,10 +1,11 @@
-import { Fragment, useState } from 'react';
 import format from 'date-fns/format';
-
+import { Fragment, useState } from 'react';
 import ManageTeamLeadModal from './team/ManageTeamLeadModal';
 
-const TeamLeadDetails = ({ uniqueId, lead, user, members }: any) => {
+const TeamLeadDetails = (props: any) => {
+  const { uniqueId, lead, user, members } = props || {};
   const [showModal, setShowModal] = useState(false);
+
   const renderModal = () => {
     return (
       <ManageTeamLeadModal
@@ -79,7 +80,7 @@ const TeamLeadDetails = ({ uniqueId, lead, user, members }: any) => {
             </table>
           </div>
           <div className="has-text-right">
-            <button className="button" onClick={() => toggleModal(true)}>
+            <button className="button" onClick={() => toggleModal(true)} disabled>
               Manage Team Lead
             </button>
           </div>

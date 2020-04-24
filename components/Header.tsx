@@ -1,14 +1,22 @@
+import { useMutation } from '@apollo/react-hooks';
+import { gql } from 'apollo-boost';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import Router from 'next/router';
 import React from 'react';
-import { withContext } from '~/utils/appContext';
-import { authUser } from './interfaces/authUser';
 
-const Header = ({ user, authenticated, logout }: authUser) => {
-  const router = useRouter();
+const Header = ({ pageProps }: any) => {
+  const { user, authenticated, loggedIn } = pageProps || {};
+  const [logoutRequest] = useMutation(LOGOUT);
 
+  /**
+   * handle logout call to GraphQL API
+   * dehydrate session in the browser
+   */
   const logoutHandler = (): any => {
-    logout();
+    logoutRequest();
+    // To trigger the event listener we save some random data into the `logout` key
+    window.localStorage.setItem('logout', JSON.stringify(Date.now()));
+    Router.push('/');
   };
 
   return (
@@ -16,9 +24,11 @@ const Header = ({ user, authenticated, logout }: authUser) => {
       <nav className="navbar header-nav">
         <div className="container">
           <div className="navbar-brand">
-            <a className="navbar-item" href="/">
-              <h2 className="subtitle has-text-weight-bold">Team App</h2>
-            </a>
+            <Link href="/">
+              <a className="navbar-item">
+                <h2 className="subtitle has-text-weight-bold">Team App</h2>
+              </a>
+            </Link>
             <span className="navbar-burger burger" data-target="navbarMenuHeroA">
               <span></span>
               <span></span>
@@ -28,7 +38,7 @@ const Header = ({ user, authenticated, logout }: authUser) => {
           <div id="navbarMenuHeroA" className="navbar-menu">
             <div className="navbar-end">
               {/* <a className="navbar-item is-active">Home</a> */}
-              {authenticated ? (
+              {loggedIn ? (
                 <div className="navbar-item has-dropdown is-hoverable">
                   <a className="navbar-link">Menu</a>
                   <div className="navbar-dropdown">
@@ -60,4 +70,12 @@ const Header = ({ user, authenticated, logout }: authUser) => {
   );
 };
 
-export default withContext(Header);
+const LOGOUT = gql`
+  mutation {
+    logout {
+      success
+    }
+  }
+`;
+
+export default Header;

@@ -9,7 +9,9 @@ import Header from '../components/Header';
 import errorMessages from '../errors';
 import { initialValues, signupSchema } from '../validation/signup';
 
-const SignUp = () => {
+const SignUp = (props: any) => {
+  console.log('SignUp:props', props);
+
   const [createUsers, { data, loading, error }] = useMutation(SIGN_UP);
   const { code }: { [key: string]: string } = error?.graphQLErrors?.[0].extensions || {};
   const router = useRouter();
@@ -199,5 +201,14 @@ const SIGN_UP = gql`
     }
   }
 `;
+
+// export const getServerSideProps: GetServerSideProps = async (ctx) => {
+//   // Check user's session
+//   const token = auth(ctx) || {};
+
+//   return {
+//     props: token,
+//   };
+// };
 
 export default SignUp;
