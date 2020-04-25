@@ -7,8 +7,8 @@ let appUrl = '';
 
 const httpLink = createHttpLink({
   // uri: 'http://localhost:4001/graphql',
-  uri: 'https://teamapp-be.now.sh/',
-  // uri: 'https://teamapp-api.now.sh/dist/server.js',
+  // uri: 'https://teamapp-be.now.sh/',
+  uri: 'https://teamapp-be.herokuapp.com/',
   credentials: 'include',
 });
 
