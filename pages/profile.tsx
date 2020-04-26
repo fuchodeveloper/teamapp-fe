@@ -22,8 +22,8 @@ const Profile = ({ pageProps }: any) => {
   // }, [loggedIn]);
 
   console.log('loggedIn:before', loggedIn);
-  if (!loggedIn) return <SigninPage />;
-  console.log('loggedIn:after', loggedIn);
+  // if (!loggedIn) return <SigninPage />;
+  // console.log('loggedIn:after', loggedIn);
   
 
   const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {
@@ -49,6 +49,7 @@ const Profile = ({ pageProps }: any) => {
     </Fragment>
   );
 
+  if (userLoading) return loadingContainer;
   if (teamLoading) return loadingContainer;
 
   if (teamError) return <div>An unexpected error occurred!</div>;
