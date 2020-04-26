@@ -4,7 +4,7 @@ import { GetServerSideProps, NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Router from 'next/router';
-import { Fragment, useEffect } from 'react';
+import { Fragment } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import Header from '~/components/Header';
 import { authUser } from '~/components/interfaces/authUser';
