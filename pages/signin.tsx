@@ -28,6 +28,7 @@ const SignIn = (props: any) => {
   if (loginStatus) {
     // cookie.set('signedin', 'true');
     Router.push('/profile');
+    window.location.href = '/profile';
   }
 
   return (
