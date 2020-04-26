@@ -1,4 +1,4 @@
-import cookie from 'js-cookie';
+import Cookies from 'js-cookie';
 import jwt from 'jsonwebtoken';
 import nextCookie from 'next-cookies';
 import Router from 'next/router';
@@ -6,10 +6,6 @@ import React, { Component } from 'react';
 
 export const auth = (ctx) => {
   const { token } = nextCookie(ctx);
-  const nonAuthUrls = ['/signin', '/signup'];
-  const me = 'me';
-
-  console.log('auth:token', token);
 
   // if (ctx.req && !token) {
   //   ctx.res.writeHead(302, { Location: '/signin' });
@@ -43,24 +39,28 @@ export const auth = (ctx) => {
   return { loggedIn: false, token: token || 'no token' };
 };
 
-export const saveUser = userData => {
-  cookie.set(me, JSON.stringify(userData));
-  // localStorage.setItem(me, JSON.stringify(userData));
-}
+export const saveUser = (userData) => {
+  Cookies.set('_uid', userData?.id || '');
+  Cookies.set('_ut', userData?.team || '');
+  Cookies.set('_uf', userData?.firstName || '');
+  Cookies.set('_ul', userData?.lastName || '');
+};
 
-export const getUser = () => {
-  return cookie.get(JSON.parse(me));
-  // return JSON.parse(localStorage.getItem(me));
-}
+export const getUser = (ctx) => {
+  const user = nextCookie(ctx);
+  return user;
+};
 
 export const removeUser = () => {
-  cookie.remove(me);
-  // localStorage.removeItem(me);
-}
+  Cookies.remove('_uid');
+  Cookies.remove('_ut');
+  Cookies.remove('_uf');
+  Cookies.remove('_ul');
+};
 
 // TODO: deprecate method
 export const logout = () => {
-  cookie.remove('token');
+  Cookies.remove('token');
   localStorage.removeItem('token');
   // To trigger the event listener we save some random data into the `logout` key
   window.localStorage.setItem('logout', Date.now()); // new

@@ -14,11 +14,11 @@ const SigninPage: NextPage = dynamic(() => import('./signin'));
 
 const Profile = (props: any) => {
   console.log('loggedIn:before', props);
-  if (!props?.pageProps) {
-    return <div>Props still loading....</div>;
-  }
+  // if (!props?.pageProps) {
+  //   return <div>Props still loading....</div>;
+  // }
 
-  const { user, authenticated } = props?.pageProps;
+  const { _uid, authenticated } = props?.pageProps;
   const loggedIn = props?.pageProps?.loggedIn || false;
   console.log('loggedIn:after', props);
 
@@ -35,11 +35,11 @@ const Profile = (props: any) => {
   // console.log('loggedIn:after', loggedIn);
 
   const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {
-    variables: { id: user?.id || '' },
+    variables: { id: _uid },
   });
 
   const { data: teamData, loading: teamLoading, error: teamError } = useQuery(GET_TEAM, {
-    variables: { id: user?.id, uniqueId: userData?.user?.team || '' },
+    variables: { id: _uid, uniqueId: userData?.user?.team || '' },
   });
 
   const loadingContainer = (
@@ -144,9 +144,11 @@ const GET_USER = gql`
   }
 `;
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (ctx: any) => {
   // Check user's session
-  const session = getUser();
+  const session = getUser(ctx);
+  console.log('session', session);
+  
 
   return {
     props: session,
