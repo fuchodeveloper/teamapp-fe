@@ -15,9 +15,7 @@ const SigninPage: NextPage = dynamic(() => import('./signin'));
 const Profile = (props: any) => {
   console.log('loggedIn:before', props);
   if (!props?.pageProps) {
-    return (
-      <div>Props still loading...</div>
-    )
+    return <div>Props still loading...</div>;
   }
 
   const { user, authenticated } = props?.pageProps;
@@ -30,12 +28,11 @@ const Profile = (props: any) => {
   // }, [loggedIn]);
   // useEffect(() => {
   //   console.log('loggedIn:useEffect:ptopss', pageProps);
-    
+
   // }, [pageProps])
 
   // if (!loggedIn) return <SigninPage />;
   // console.log('loggedIn:after', loggedIn);
-  
 
   const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {
     variables: { id: user?.id || '' },
