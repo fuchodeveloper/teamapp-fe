@@ -16,10 +16,10 @@ const Profile = ({ pageProps }: authUser) => {
   const { user, authenticated } = pageProps || {};
   const loggedIn = pageProps?.loggedIn || false;
 
-  useEffect(() => {
-    if (loggedIn) return; // do nothing if the user is logged in
-    Router.replace('/profile', '/signin', { shallow: true });
-  }, [loggedIn]);
+  // useEffect(() => {
+  //   if (loggedIn) return; // do nothing if the user is logged in
+  //   Router.replace('/profile', '/signin', { shallow: true });
+  // }, [loggedIn]);
 
   if (!loggedIn) return <SigninPage />;
 
