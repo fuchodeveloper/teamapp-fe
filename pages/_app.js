@@ -15,29 +15,29 @@ function MyApp({ Component, ...pageProps }) {
   );
 }
 
-// export const getServerSideProps = async (ctx) => {
-//   // Check user's session
-//   const session = auth(ctx);
-
-//   console.log('MyApp.getServerSideProps:token', session);
-//   return {
-//     props: session,
-//   };
-// };
-
-MyApp.getInitialProps = async (ctx) => {
-  //  if (process.browser) {
-  //    history.go();
-  //  }
-
+export const getServerSideProps = async (ctx) => {
   // Check user's session
-  const token = auth(ctx?.ctx || ctx) || '';
+  const session = auth(ctx);
 
-  console.log('MyApp.getInitialProps:token', ctx);
-  return token;
-  // return {
-  //   props: { token },
-  // };
+  console.log('MyApp.getServerSideProps:token', session);
+  return {
+    props: session,
+  };
 };
+
+// MyApp.getInitialProps = async (ctx) => {
+//   //  if (process.browser) {
+//   //    history.go();
+//   //  }
+
+//   // Check user's session
+//   const token = auth(ctx?.ctx || ctx) || '';
+
+//   console.log('MyApp.getInitialProps:token', ctx);
+//   return token;
+//   // return {
+//   //   props: { token },
+//   // };
+// };
 
 export default MyApp;

@@ -147,28 +147,28 @@ const GET_USER = gql`
   }
 `;
 
-// export const getServerSideProps: GetServerSideProps = async (ctx) => {
-//   // Check user's session
-//   const session = auth(ctx);
-
-//   return {
-//     props: session,
-//   };
-// };
-
-Profile.getInitialProps = async (ctx: any) => {
-  //  if (process.browser) {
-  //    history.go();
-  //  }
-
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
   // Check user's session
-  const token = auth(ctx?.ctx || ctx) || '';
+  const session = auth(ctx);
 
-  console.log('Profile.getInitialProps:token', token);
-  return token;
-  // return {
-  //   props: { token },
-  // };
+  return {
+    props: session,
+  };
 };
+
+// Profile.getInitialProps = async (ctx: any) => {
+//   //  if (process.browser) {
+//   //    history.go();
+//   //  }
+
+//   // Check user's session
+//   const token = auth(ctx?.ctx || ctx) || '';
+
+//   console.log('Profile.getInitialProps:token', token);
+//   return token;
+//   // return {
+//   //   props: { token },
+//   // };
+// };
 
 export default Profile;
