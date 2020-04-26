@@ -12,8 +12,8 @@ import { auth } from '~/utils/auth';
 
 const SigninPage: NextPage = dynamic(() => import('./signin'));
 
-const Profile = ({ pageProps }: authUser) => {
-  const { user, authenticated } = pageProps || {};
+const Profile = ({ pageProps }: any) => {
+  const { user, authenticated } = pageProps;
   const loggedIn = pageProps?.loggedIn || false;
 
   // useEffect(() => {
