@@ -7,6 +7,8 @@ import '../node_modules/@fortawesome/fontawesome-free/js/all';
 import '../styles/index.scss';
 
 function MyApp({ Component, ...pageProps }) {
+  console.log('MyApp:pageProps', pageProps);
+  
   return (
     <ApolloProvider client={client}>
       <Component {...pageProps} />
