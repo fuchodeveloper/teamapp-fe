@@ -13,6 +13,12 @@ import { auth } from '~/utils/auth';
 const SigninPage: NextPage = dynamic(() => import('./signin'));
 
 const Profile = ({ pageProps }: any) => {
+  if (!pageProps) {
+    return (
+      <div>Props still loading...</div>
+    )
+  }
+
   const { user, authenticated } = pageProps;
   const loggedIn = pageProps?.loggedIn || false;
 
