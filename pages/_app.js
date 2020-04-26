@@ -2,6 +2,7 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import React from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { client } from '../client';
+import { auth } from '~/utils/auth';
 import '../node_modules/@fortawesome/fontawesome-free/js/all';
 import '../styles/index.scss';
 
