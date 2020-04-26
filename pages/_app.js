@@ -6,7 +6,6 @@ import { auth } from '~/utils/auth';
 import '../node_modules/@fortawesome/fontawesome-free/js/all';
 import '../styles/index.scss';
 
-
 function MyApp({ Component, ...pageProps }) {
   return (
     <ApolloProvider client={client}>
