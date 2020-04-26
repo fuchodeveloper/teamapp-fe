@@ -33,7 +33,7 @@ MyApp.getInitialProps = async (ctx) => {
   // Check user's session
   const token = auth(ctx?.ctx || ctx) || '';
 
-  console.log('MyApp.getInitialProps:token', ctx);
+  console.log('MyApp.getInitialProps:ctx', ctx?.ctx?.req?.headers?.cookie, 'token', token);
   return token;
   // return {
   //   props: { token },
