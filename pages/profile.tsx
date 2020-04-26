@@ -13,7 +13,8 @@ import { auth } from '~/utils/auth';
 const SigninPage: NextPage = dynamic(() => import('./signin'));
 
 const Profile = (props: any) => {
-  if (!props.pageProps) {
+  console.log('loggedIn:before', props);
+  if (!props?.pageProps) {
     return (
       <div>Props still loading...</div>
     )
@@ -21,7 +22,7 @@ const Profile = (props: any) => {
 
   const { user, authenticated } = props?.pageProps;
   const loggedIn = props?.pageProps?.loggedIn || false;
-  console.log('loggedIn:before', props);
+  console.log('loggedIn:after', props);
 
   // useEffect(() => {
   //   if (loggedIn) return; // do nothing if the user is logged in
