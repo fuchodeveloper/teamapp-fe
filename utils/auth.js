@@ -4,11 +4,11 @@ import nextCookie from 'next-cookies';
 import Router from 'next/router';
 import React, { Component } from 'react';
 
-export const auth = (ctx) => {
-  const { token } = nextCookie(ctx);
+export const auth = (token) => {
+  // const { token } = nextCookie(ctx);
   const nonAuthUrls = ['/signin', '/signup'];
 
-  console.log('token', token);
+  // console.log('token', token);
 
   // if (ctx.req && !token) {
   //   ctx.res.writeHead(302, { Location: '/signin' });

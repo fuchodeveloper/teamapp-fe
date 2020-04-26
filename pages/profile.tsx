@@ -147,12 +147,12 @@ const GET_USER = gql`
 `;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const token = ctx.req.headers.cookie?.slice(6);
   // Check user's session
-  const session = auth(ctx);
+  const session = auth(token);
 
   return {
-    props: ctx,
-    // props: session,
+    props: session,
   };
 };
 
