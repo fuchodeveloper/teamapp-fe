@@ -12,26 +12,26 @@ import { auth } from '~/utils/auth';
 
 const SigninPage: NextPage = dynamic(() => import('./signin'));
 
-const Profile = ({ pageProps }: any) => {
-  if (!pageProps) {
+const Profile = (props: any) => {
+  if (!props.pageProps) {
     return (
       <div>Props still loading...</div>
     )
   }
 
-  const { user, authenticated } = pageProps;
-  const loggedIn = pageProps?.loggedIn || false;
+  const { user, authenticated } = props?.pageProps;
+  const loggedIn = props?.pageProps?.loggedIn || false;
+  console.log('loggedIn:before', props);
 
   // useEffect(() => {
   //   if (loggedIn) return; // do nothing if the user is logged in
   //   Router.replace('/profile', '/signin', { shallow: true });
   // }, [loggedIn]);
-  useEffect(() => {
-    console.log('loggedIn:useEffect:ptopss', pageProps);
+  // useEffect(() => {
+  //   console.log('loggedIn:useEffect:ptopss', pageProps);
     
-  }, [pageProps])
+  // }, [pageProps])
 
-  console.log('loggedIn:before', pageProps);
   // if (!loggedIn) return <SigninPage />;
   // console.log('loggedIn:after', loggedIn);
   
@@ -46,7 +46,7 @@ const Profile = ({ pageProps }: any) => {
 
   const loadingContainer = (
     <Fragment>
-      <Header pageProps={pageProps} />
+      <Header pageProps={props?.pageProps} />
       <section className="section">
         <div className="container">
           <div className="card card-wrapper">
@@ -68,7 +68,7 @@ const Profile = ({ pageProps }: any) => {
 
   return (
     <>
-      <Header pageProps={pageProps} />
+      <Header pageProps={props?.pageProps} />
       <section className="hero">
         <div className="hero-body">
           <div className="container">
