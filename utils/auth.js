@@ -39,7 +39,7 @@ export const auth = (token) => {
     };
   }
 
-  return { loggedIn: false, token };
+  return { loggedIn: false, token: token || 'no token' };
 };
 
 export const logout = () => {
