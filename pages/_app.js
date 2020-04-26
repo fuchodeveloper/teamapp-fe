@@ -14,15 +14,15 @@ function MyApp({ Component, ...pageProps }) {
   );
 }
 
-// export const getServerSideProps = async (ctx) => {
-//   // Check user's session
-//   const session = auth(ctx);
+export const getServerSideProps = async (ctx) => {
+  // Check user's session
+  const session = auth(ctx);
 
-//   console.log('MyApp.getServerSideProps:token', session);
-//   return {
-//     props: session,
-//   };
-// };
+  console.log('MyApp.getServerSideProps:token', session);
+  return {
+    props: session,
+  };
+};
 
 // MyApp.getInitialProps = async (ctx) => {
 //   //  if (process.browser) {
