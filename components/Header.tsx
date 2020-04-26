@@ -47,7 +47,8 @@ const Header = ({ pageProps }: any) => {
                     </Link>
 
                     <hr className="navbar-divider" />
-                    <a onClick={() => logoutHandler()} className="navbar-item has-text-danger">
+                    {/* <a onClick={() => logoutHandler()} className="navbar-item has-text-danger"> */}
+                    <a className="navbar-item has-text-danger">
                       Log out
                     </a>
                   </div>

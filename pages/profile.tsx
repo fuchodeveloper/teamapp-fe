@@ -21,7 +21,10 @@ const Profile = ({ pageProps }: authUser) => {
   //   Router.replace('/profile', '/signin', { shallow: true });
   // }, [loggedIn]);
 
+  console.log('loggedIn:before', loggedIn);
   if (!loggedIn) return <SigninPage />;
+  console.log('loggedIn:after', loggedIn);
+  
 
   const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {
     variables: { id: user?.id || '' },
