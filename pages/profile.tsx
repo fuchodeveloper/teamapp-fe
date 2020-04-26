@@ -15,7 +15,7 @@ const SigninPage: NextPage = dynamic(() => import('./signin'));
 const Profile = (props: any) => {
   console.log('loggedIn:before', props);
   if (!props?.pageProps) {
-    return <div>Props still loading...</div>;
+    return <div>Props still loading....</div>;
   }
 
   const { user, authenticated } = props?.pageProps;
