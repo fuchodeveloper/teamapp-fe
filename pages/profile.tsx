@@ -26,8 +26,12 @@ const Profile = ({ pageProps }: any) => {
   //   if (loggedIn) return; // do nothing if the user is logged in
   //   Router.replace('/profile', '/signin', { shallow: true });
   // }, [loggedIn]);
+  useEffect(() => {
+    console.log('loggedIn:useEffect:ptopss', pageProps);
+    
+  }, [pageProps])
 
-  console.log('loggedIn:before', loggedIn);
+  console.log('loggedIn:before', pageProps);
   // if (!loggedIn) return <SigninPage />;
   // console.log('loggedIn:after', loggedIn);
   
