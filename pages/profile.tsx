@@ -151,7 +151,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = auth(ctx);
 
   return {
-    props: session,
+    props: ctx,
+    // props: session,
   };
 };
 
