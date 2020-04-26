@@ -23,6 +23,10 @@ const SignIn = (props: any) => {
 
   const dynamicClasses = classnames({ 'is-loading': called && loading });
 
+  if (called && loading) {
+    return <p>Loading...</p>
+  }
+
   const loginStatus = data?.login?.success;
 
   if (loginStatus) {

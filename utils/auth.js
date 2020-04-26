@@ -8,7 +8,7 @@ export const auth = (ctx) => {
   const { token } = nextCookie(ctx);
   const nonAuthUrls = ['/signin', '/signup'];
 
-  // console.log('ifffffffffff', ctx?.res);
+  console.log('token', token);
 
   // if (ctx.req && !token) {
   //   ctx.res.writeHead(302, { Location: '/signin' });
