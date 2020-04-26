@@ -7,8 +7,6 @@ import '../node_modules/@fortawesome/fontawesome-free/js/all';
 import '../styles/index.scss';
 
 function MyApp({ Component, ...pageProps }) {
-  console.log('MyApp:pageProps', pageProps);
-  
   return (
     <ApolloProvider client={client}>
       <Component {...pageProps} />
@@ -26,19 +24,19 @@ function MyApp({ Component, ...pageProps }) {
 //   };
 // };
 
-MyApp.getInitialProps = async (ctx) => {
-  //  if (process.browser) {
-  //    history.go();
-  //  }
+// MyApp.getInitialProps = async (ctx) => {
+//   //  if (process.browser) {
+//   //    history.go();
+//   //  }
 
-  // Check user's session
-  const token = auth(ctx?.ctx || ctx) || '';
+//   // Check user's session
+//   const token = auth(ctx?.ctx || ctx) || '';
 
-  console.log('MyApp.getInitialProps:ctx', ctx?.ctx?.req?.headers?.cookie, 'MyApp:token', token);
-  return token;
-  // return {
-  //   props: { token },
-  // };
-};
+//   console.log('MyApp.getInitialProps:ctx', ctx?.ctx?.req?.headers?.cookie, 'MyApp:token', token);
+//   return token;
+//   // return {
+//   //   props: { token },
+//   // };
+// };
 
 export default MyApp;

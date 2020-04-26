@@ -7,7 +7,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Router from 'next/router';
 import { Fragment } from 'react';
-import { auth } from '~/utils/auth';
+import { auth, saveUser } from '~/utils/auth';
 import Header from '../components/Header';
 import errorMessages from '../errors';
 import { initialValues, signinSchema } from '../validation/signin';
@@ -27,12 +27,11 @@ const SignIn = (props: any) => {
     return <p>Loading...</p>
   }
 
-  const loginStatus = data?.login?.success;
+  const loginStatus = data?.login?.id;
 
   if (loginStatus) {
-    // cookie.set('signedin', 'true');
+    saveUser(data?.login);
     Router.push('/profile');
-    // window.location.href = '/profile';
   }
 
   return (
@@ -159,7 +158,10 @@ const SignIn = (props: any) => {
 const SIGN_IN = gql`
   query loginUser($email: String!, $password: String!) {
     login(email: $email, password: $password) {
-      success
+      id
+      firstName
+      lastName
+      team
     }
   }
 `;

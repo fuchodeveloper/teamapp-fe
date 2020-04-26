@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 export const auth = (ctx) => {
   const { token } = nextCookie(ctx);
   const nonAuthUrls = ['/signin', '/signup'];
+  const me = 'me';
 
   console.log('auth:token', token);
 
@@ -42,6 +43,22 @@ export const auth = (ctx) => {
   return { loggedIn: false, token: token || 'no token' };
 };
 
+export const saveUser = userData => {
+  cookie.set(me, JSON.stringify(userData));
+  // localStorage.setItem(me, JSON.stringify(userData));
+}
+
+export const getUser = () => {
+  return cookie.get(JSON.parse(me));
+  // return JSON.parse(localStorage.getItem(me));
+}
+
+export const removeUser = () => {
+  cookie.remove(me);
+  // localStorage.removeItem(me);
+}
+
+// TODO: deprecate method
 export const logout = () => {
   cookie.remove('token');
   localStorage.removeItem('token');
