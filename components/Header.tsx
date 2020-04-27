@@ -7,7 +7,7 @@ import { removeUser } from '~/utils/auth';
 
 const Header = (props: any) => {
   console.log('props', props?.pageProps);
-  
+
   const { _uid, _uf } = props?.pageProps || {};
   const loggedIn = _uid || false;
   const [logoutRequest] = useMutation(LOGOUT);
@@ -29,11 +29,9 @@ const Header = (props: any) => {
       <nav className="navbar header-nav">
         <div className="container">
           <div className="navbar-brand">
-            <Link href="/">
-              <a className="navbar-item">
-                <h2 className="subtitle has-text-weight-bold">Team App</h2>
-              </a>
-            </Link>
+            <a className="navbar-item" href="/">
+              <h2 className="subtitle has-text-weight-bold">Team App</h2>
+            </a>
             <span className="navbar-burger burger" data-target="navbarMenuHeroA">
               <span></span>
               <span></span>
