@@ -4,7 +4,7 @@ import { GetServerSideProps, NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Router from 'next/router';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import Header from '~/components/Header';
 import { authUser } from '~/components/interfaces/authUser';
@@ -13,15 +13,9 @@ import { auth, getUser } from '~/utils/auth';
 const SigninPage: NextPage = dynamic(() => import('./signin'));
 
 const Profile = (props: any) => {
-  console.log('loggedIn:before', props);
-  // if (!props?.pageProps) {
-  //   return <div>Props still loading....</div>;
-  // }
-
-  const { _uid, authenticated } = props?.pageProps;
-  const loggedIn = props?.pageProps?.loggedIn || false;
-  console.log('loggedIn:after', props);
-
+  const { _uid } = props?.pageProps;
+  const loggedIn = _uid || false;
+  
   // useEffect(() => {
   //   if (loggedIn) return; // do nothing if the user is logged in
   //   Router.replace('/profile', '/signin', { shallow: true });
@@ -31,13 +25,15 @@ const Profile = (props: any) => {
 
   // }, [pageProps])
 
-  // if (!loggedIn) return <SigninPage />;
-  // console.log('loggedIn:after', loggedIn);
+  // useEffect(() => {
+  //   if (loggedIn) return;
+  //   Router.push('/signin');
+  // }, [loggedIn])
 
   const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {
     variables: { id: _uid },
   });
-
+  
   const { data: teamData, loading: teamLoading, error: teamError } = useQuery(GET_TEAM, {
     variables: { id: _uid, uniqueId: userData?.user?.team || '' },
   });
@@ -85,7 +81,7 @@ const Profile = (props: any) => {
                   </p>
                 </div>
                 <br />
-                <button className="button has-text-weight-bold">Manage Details</button>
+                <button className="button has-text-weight-bold" disabled>Manage Details</button>
               </div>
             </div>
             <br />
@@ -147,27 +143,10 @@ const GET_USER = gql`
 export const getServerSideProps = async (ctx: any) => {
   // Check user's session
   const session = getUser(ctx);
-  console.log('session', session);
-  
 
   return {
     props: session,
   };
 };
-
-// Profile.getInitialProps = async (ctx: any) => {
-//   //  if (process.browser) {
-//   //    history.go();
-//   //  }
-
-//   // Check user's session
-//   const token = auth(ctx?.ctx || ctx) || '';
-
-//   console.log('Profile.getInitialProps:token', token);
-//   return token;
-//   // return {
-//   //   props: { token },
-//   // };
-// };
 
 export default Profile;

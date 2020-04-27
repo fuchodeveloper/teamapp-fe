@@ -14,6 +14,7 @@ const TeamLeadDetails = (props: any) => {
         showModal={showModal}
         members={members}
         toggleModal={toggleModal}
+        {...props}
       />
     );
   };
@@ -63,7 +64,7 @@ const TeamLeadDetails = (props: any) => {
                       <td>{format(new Date(lead.start), 'E, dd MMM. yyyy')}</td>
                       <td>{format(new Date(lead.stop), 'E, dd MMM. yyyy')}</td>
                       <td>
-                        <a href="https://en.wikipedia.org/wiki/Leicester_City_F.C." title="Leicester City F.C.">
+                        <a title="">
                           View duties
                         </a>
                       </td>
@@ -80,7 +81,7 @@ const TeamLeadDetails = (props: any) => {
             </table>
           </div>
           <div className="has-text-right">
-            <button className="button" onClick={() => toggleModal(true)} disabled>
+            <button className="button" onClick={() => toggleModal(true)}>
               Manage Team Lead
             </button>
           </div>

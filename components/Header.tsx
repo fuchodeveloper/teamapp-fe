@@ -3,9 +3,13 @@ import { gql } from 'apollo-boost';
 import Link from 'next/link';
 import Router from 'next/router';
 import React from 'react';
+import { removeUser } from '~/utils/auth';
 
-const Header = ({ pageProps }: any) => {
-  const { user, authenticated, loggedIn } = pageProps || {};
+const Header = (props: any) => {
+  console.log('props', props?.pageProps);
+  
+  const { _uid, _uf } = props?.pageProps || {};
+  const loggedIn = _uid || false;
   const [logoutRequest] = useMutation(LOGOUT);
 
   /**
@@ -14,6 +18,7 @@ const Header = ({ pageProps }: any) => {
    */
   const logoutHandler = (): any => {
     logoutRequest();
+    removeUser();
     // To trigger the event listener we save some random data into the `logout` key
     window.localStorage.setItem('logout', JSON.stringify(Date.now()));
     Router.push('/');
@@ -40,15 +45,14 @@ const Header = ({ pageProps }: any) => {
               {/* <a className="navbar-item is-active">Home</a> */}
               {loggedIn ? (
                 <div className="navbar-item has-dropdown is-hoverable">
-                  <a className="navbar-link">Menu</a>
+                  <a className="navbar-link">{`${_uf}`}</a>
                   <div className="navbar-dropdown">
                     <Link href="/profile">
                       <a className="navbar-item">Profile</a>
                     </Link>
 
                     <hr className="navbar-divider" />
-                    {/* <a onClick={() => logoutHandler()} className="navbar-item has-text-danger"> */}
-                    <a className="navbar-item has-text-danger">
+                    <a onClick={() => logoutHandler()} className="navbar-item has-text-danger">
                       Log out
                     </a>
                   </div>

@@ -3,12 +3,12 @@ import { gql } from 'apollo-boost';
 import classnames from 'classnames';
 import { addDays } from 'date-fns';
 import { Formik } from 'formik';
-import { useContext } from 'react';
 import DatePicker from 'react-datepicker';
-import { appContext } from '~/utils/appContext';
 import { manageTeamLeadSchema } from '~/validation/team';
+import { ObjectID } from 'mongodb';
 
-interface Props {
+type Props = {
+  _uid: ObjectID;
   uniqueId: string;
   showModal: boolean;
   toggleModal: Function;
@@ -20,7 +20,7 @@ interface Props {
   };
 }
 
-interface Error {
+type Error = {
   name?: string;
 }
 
@@ -29,7 +29,9 @@ interface Error {
  * @param props value from parent
  */
 const ManageTeamLeadModal = (props: Props) => {
-  const ctx = useContext(appContext);
+  console.log('ManageTeamLeadModal:props', props);
+  const { _uid, uniqueId } = props || {};
+
   const [createOrUpdateTeamLead, { data: teamLeadData, loading: teamLeadLoading, error: teamLeadError }] = useMutation(
     MANAGE_TEAMLEAD,
   );
@@ -37,7 +39,6 @@ const ManageTeamLeadModal = (props: Props) => {
   console.log('teamLeadData', teamLeadData, 'teamLeadError', teamLeadError);
 
   const showModalClass = classnames({ 'is-active': props.showModal });
-  const ctxProps: any = ctx && { ...ctx };
 
   return (
     <div className={`modal ${showModalClass}`}>
@@ -52,9 +53,10 @@ const ManageTeamLeadModal = (props: Props) => {
             userId: nameArr[1],
             start: values.start,
             stop: values.stop,
-            creator: ctxProps?.user?.id,
-            teamUniqueId: props?.uniqueId,
+            creator: _uid,
+            teamUniqueId: uniqueId,
           };
+          
           createOrUpdateTeamLead({ variables: { input: request } });
           setSubmitting(false);
         }}

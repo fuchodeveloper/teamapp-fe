@@ -8,10 +8,9 @@ import { Fragment } from 'react';
 import Header from '../components/Header';
 import errorMessages from '../errors';
 import { initialValues, signupSchema } from '../validation/signup';
+import { getUser } from '~/utils/auth';
 
 const SignUp = (props: any) => {
-  console.log('SignUp:props', props);
-
   const [createUsers, { data, loading, error }] = useMutation(SIGN_UP);
   const { code }: { [key: string]: string } = error?.graphQLErrors?.[0].extensions || {};
   const router = useRouter();
@@ -202,13 +201,14 @@ const SIGN_UP = gql`
   }
 `;
 
-// export const getServerSideProps: GetServerSideProps = async (ctx) => {
-//   // Check user's session
-//   const token = auth(ctx) || {};
+export const getServerSideProps = async (ctx: { query: { id: string } }) => {
+  // Check user's session
+  const session = getUser(ctx);
+  const teamId = ctx?.query?.id || '';
 
-//   return {
-//     props: token,
-//   };
-// };
+  return {
+    props: { teamId, ...session },
+  };
+};
 
 export default SignUp;

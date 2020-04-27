@@ -7,25 +7,19 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Router from 'next/router';
 import { Fragment } from 'react';
-import { auth, saveUser } from '~/utils/auth';
+import { auth, saveUser, getUser } from '~/utils/auth';
 import Header from '../components/Header';
 import errorMessages from '../errors';
 import { initialValues, signinSchema } from '../validation/signin';
 
-const ProfilePage = dynamic(() => import('./profile'));
-
 const SignIn = (props: any) => {
-  console.log('SignIn:props', props);
+  const { _uid  } = props?.pageProps;
 
   const [loginUser, { called, loading, data, error }] = useLazyQuery(SIGN_IN);
   const { code }: { [key: string]: string } = error?.graphQLErrors?.[0]?.extensions || {};
-  const loggedIn = props?.pageProps?.loggedIn;
+  const loggedIn = _uid || false;
 
   const dynamicClasses = classnames({ 'is-loading': called && loading });
-
-  if (called && loading) {
-    return <p>Loading...</p>
-  }
 
   const loginStatus = data?.login?.id;
 
@@ -166,25 +160,15 @@ const SIGN_IN = gql`
   }
 `;
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps = async (ctx: object) => {
   // Check user's session
-  const session = auth(ctx);
+  const session = getUser(ctx);
+  console.log('session', session);
+  
 
   return {
     props: session,
   };
 };
 
-// SignIn.getInitialProps = async (ctx: { ctx: any; }) => {
-//   // Check user's session
-//   const token = auth(ctx?.ctx || ctx) || '';
-
-//   console.log('SignIn.getInitialProps:token', token);
-//   return token;
-//   // return {
-//   //   props: { token },
-//   // };
-// };
-
 export default SignIn;
-// export default withAuthSync(SignIn);

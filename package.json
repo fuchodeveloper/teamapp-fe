@@ -28,6 +28,7 @@
     "@types/classnames": "^2.2.10",
     "@types/js-cookie": "^2.2.6",
     "@types/jsonwebtoken": "^8.3.8",
+    "@types/mongodb": "^3.5.14",
     "@types/react-datepicker": "^2.11.0",
     "@types/yup": "^0.26.34",
     "apollo-boost": "^0.4.7",

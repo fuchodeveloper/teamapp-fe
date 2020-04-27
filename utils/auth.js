@@ -4,6 +4,7 @@ import nextCookie from 'next-cookies';
 import Router from 'next/router';
 import React, { Component } from 'react';
 
+// TODO: deprecate method
 export const auth = (ctx) => {
   const { token } = nextCookie(ctx);
 
@@ -39,6 +40,10 @@ export const auth = (ctx) => {
   return { loggedIn: false, token: token || 'no token' };
 };
 
+/**
+ * Saves user data from token to cookies for future use
+ * @param {obj} userData
+ */
 export const saveUser = (userData) => {
   Cookies.set('_uid', userData?.id || '');
   Cookies.set('_ut', userData?.team || '');
@@ -46,11 +51,35 @@ export const saveUser = (userData) => {
   Cookies.set('_ul', userData?.lastName || '');
 };
 
+/**
+ * Return current authenticated user from context
+ * Redirect user if no id is gotten from cookie
+ * @param {obj} ctx
+ */
 export const getUser = (ctx) => {
+  const guestRoutes = ['/signin', '/signup', '/'];
+  const authRoutes = ['/profile'];
+
   const user = nextCookie(ctx);
-  return user;
+  if (ctx?.req && !user?._uid && !guestRoutes.includes(ctx?.req?.url)) {
+    ctx.res.writeHead(302, { Location: '/signin' });
+    ctx.res.end();
+    return;
+  }
+
+  // if (ctx.req && user?._uid && guestRoutes.includes(ctx?.req?.url)) {
+  //   ctx.res.writeHead(302, { Location: '/profile' });
+  //   ctx.res.end();
+  //   return;
+  // }
+
+
+  return user || { token: null };
 };
 
+/**
+ * Removes user cookie data as part of logout process
+ */
 export const removeUser = () => {
   Cookies.remove('_uid');
   Cookies.remove('_ut');

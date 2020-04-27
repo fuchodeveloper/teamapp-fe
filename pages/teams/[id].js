@@ -7,21 +7,16 @@ import Skeleton from 'react-loading-skeleton';
 import Header from '~/components/Header';
 import TeamDetails from '~/components/TeamDetails';
 import TeamLeadDetails from '~/components/TeamLeadDetails';
-import { auth } from '~/utils/auth';
+import { getUser } from '~/utils/auth';
 
-const SigninPage = dynamic(() => import('../signin'));
-
-const ViewTeam = ({ pageProps }) => {
+const ViewTeam = (props) => {
   /**
    * team id represented as `id`
    */
-  const { teamId, user, authenticated } = pageProps || {};
-  const loggedIn = pageProps?.loggedIn || false;
-
-  if (!loggedIn) return <SigninPage />;
+  const { teamId, _uid } = props?.pageProps;
 
   const { data: teamData, loading: teamLoading, error: teamError } = useQuery(GET_TEAM, {
-    variables: { id: user?.id, uniqueId: teamId },
+    variables: { id: _uid, uniqueId: teamId },
   });
 
   const loadingContainer = (
@@ -42,7 +37,7 @@ const ViewTeam = ({ pageProps }) => {
 
   return (
     <Fragment>
-      <Header pageProps={pageProps} />
+      <Header pageProps={props?.pageProps} />
       <section className="section">
         <div className="container">
           <nav className="level">
@@ -73,10 +68,10 @@ const ViewTeam = ({ pageProps }) => {
                 lead={team?.teamLead?.lead}
                 user={team?.teamLead?.user}
                 members={team?.members}
-                {...pageProps}
+                {...props?.pageProps}
               />
 
-              <TeamDetails members={team?.members} {...pageProps} />
+              <TeamDetails members={team?.members} {...props?.pageProps} />
             </>
           ) : (
             <>
@@ -153,7 +148,7 @@ const GET_TEAM = gql`
 
 export const getServerSideProps = async (ctx) => {
   // Check user's session
-  const session = auth(ctx);
+  const session = getUser(ctx);
   const teamId = ctx.query.id;
 
   return {

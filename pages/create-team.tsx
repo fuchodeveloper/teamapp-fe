@@ -5,20 +5,17 @@ import { GetServerSideProps, NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Router from 'next/router';
-import { Fragment } from 'react';
+import { Fragment, Context } from 'react';
 import { authUser } from '~/components/interfaces/authUser';
-import { auth } from '~/utils/auth';
+import { auth, getUser } from '~/utils/auth';
 import Header from '../components/Header';
 import { initialValues, teamSchema } from '../validation/team';
 
-const SigninPage: NextPage = dynamic(() => import('./signin'));
-
-const CreateTeam = ({ pageProps }: authUser) => {
-  const { user, authenticated } = pageProps || {};
-  const loggedIn = pageProps?.loggedIn || false;
+const CreateTeam = (props: any) => {
+  const { _uid } = props?.pageProps;
   const [createTeam, { data: teamData, loading: teamLoading, error: teamError }] = useMutation(CREATE_TEAM);
   const { data: userData, loading: userLoading, error: userErr } = useQuery(GET_USER, {
-    variables: { id: user?.id || '' },
+    variables: { id: _uid || '' },
   });
   const teamId = teamData?.createTeam?.uniqueId;
 
@@ -26,11 +23,9 @@ const CreateTeam = ({ pageProps }: authUser) => {
     Router.push(`/teams/${teamId}`);
   }
 
-  if (!loggedIn) return <SigninPage />;
-
   return (
     <Fragment>
-      <Header pageProps={pageProps} />
+      <Header pageProps={props?.pageProps} />
       <section className="hero">
         <div className="hero-body">
           <div className="container">
@@ -158,9 +153,9 @@ const GET_USER = gql`
   }
 `;
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps = async (ctx: any) => {
   // Check user's session
-  const session = auth(ctx) || {};
+  const session = getUser(ctx);
 
   return {
     props: session,

@@ -1,21 +1,21 @@
-import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { authUser } from '~/components/interfaces/authUser';
-import { auth } from '~/utils/auth';
+import { getUser } from '~/utils/auth';
 import Header from '../components/Header';
 
-const Index = ({ pageProps }: authUser) => {
-  const { user, loggedIn } = pageProps || {};
+const Index = (props: authUser) => {
+  const { _uid } = props?.pageProps || {};
+  const loggedIn = _uid || false;
 
   return (
     <div>
-      <Header pageProps={pageProps} />
+      <Header pageProps={props?.pageProps} />
       <section className="hero is-link is-fullheight-with-navbar">
         <div className="hero-body">
           <div className="container has-text-centered">
             <h1 className="title">Team Lead Picker</h1>
             <h5 className="subtitle">Automate the process of managing team responsibilities</h5>
-            {!user?.id && !loggedIn && (
+            {!loggedIn && (
               <Link href="/signup">
                 <a className="button theme-color-bg has-text-white no-border m-r-1 has-text-weight-bold">Get Started</a>
               </Link>
@@ -28,9 +28,9 @@ const Index = ({ pageProps }: authUser) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps = async (context: object) => {
   // Check user's session
-  const session = auth(ctx);
+  const session = getUser(context);
 
   return {
     props: session,

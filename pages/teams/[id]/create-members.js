@@ -4,12 +4,12 @@ import { Formik } from 'formik';
 import Router from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
 import Header from '~/components/Header';
-import { auth } from '~/utils/auth';
+import { getUser } from '~/utils/auth';
 
-const CreateMembers = ({ pageProps }) => {
-  const { id, user, authenticated } = pageProps || {};
-  const loggedIn = pageProps?.loggedIn || false;
-  const teamId = pageProps?.id;
+const CreateMembers = (props) => {
+  const { _uid } = props?.pageProps;
+  // const loggedIn = pageProps?.loggedIn || false;
+  const teamId = props?.pageProps?.id;
 
   const [inputFields, setInputFields] = useState([{ firstName: '', lastName: '', email: '', team: '' }]);
   const [createTeamMembers, { data: membersData, loading: membersLoading, error: membersError }] = useMutation(
@@ -22,14 +22,12 @@ const CreateMembers = ({ pageProps }) => {
 
   useEffect(() => {
     if (teamId) {
-      getTeam({ variables: { id: user?.id, uniqueId: teamId } });
+      getTeam({ variables: { id: _uid, uniqueId: teamId } });
     }
   }, [teamId]);
 
   // TODO: redirect user to team page after creating team
   if (!membersLoading && membersData?.createTeamUsers?.length > 0) {
-    console.log('redirect');
-
     Router.push(`/teams/${teamId}`);
   }
 
@@ -87,7 +85,7 @@ const CreateMembers = ({ pageProps }) => {
 
   return (
     <Fragment>
-      <Header />
+      <Header pageProps={props?.pageProps} />
       <section className="hero">
         <div className="hero-body">
           <div className="container">
@@ -273,7 +271,7 @@ const GET_TEAM = gql`
 
 export async function getServerSideProps(ctx) {
   // Check user's session
-  const session = auth(ctx);
+  const session = getUser(ctx);
   const id = ctx.query.id;
 
   return {
