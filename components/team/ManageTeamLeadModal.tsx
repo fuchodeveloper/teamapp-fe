@@ -62,7 +62,6 @@ const ManageTeamLeadModal = (props: Props) => {
         }}
       >
         {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setFieldValue }) => {
-          console.log('error', errors);
           return (
             <form onSubmit={handleSubmit}>
               <div className="modal-card">
@@ -110,8 +109,20 @@ const ManageTeamLeadModal = (props: Props) => {
                             }}
                             className="input is-fullwidth"
                             minDate={new Date()}
+                            maxDate={addDays(new Date(), 21)}
                             placeholderText="Select start date"
                             required
+                            // TODO: fix bug
+                            // popperPlacement="bottom"
+                            // popperModifiers={{
+                            //   flip: {
+                            //     enabled: false,
+                            //   },
+                            //   // preventOverflow: {
+                            //   //   enabled: true,
+                            //   //   escapeWithReference: false,
+                            //   // },
+                            // }}
                           />
                           <span className="icon is-small is-left">
                             <i className="fas fa-calendar" />
@@ -135,7 +146,7 @@ const ManageTeamLeadModal = (props: Props) => {
                             className="input is-fullwidth"
                             placeholderText="Select stop date"
                             minDate={addDays(new Date(), 1)}
-                            maxDate={addDays(new Date(), 21)}
+                            maxDate={addDays(new Date(), 30)}
                           />
                           <span className="icon is-small is-left">
                             <i className="fas fa-calendar" />

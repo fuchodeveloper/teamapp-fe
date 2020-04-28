@@ -1,16 +1,20 @@
 import { useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
+import classnames from 'classnames';
 import Link from 'next/link';
 import Router from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
 import { removeUser } from '~/utils/auth';
 
 const Header = (props: any) => {
-  console.log('props', props?.pageProps);
+  const [showNavbar, setShowNavbar] = useState(false);
 
-  const { _uid, _uf } = props?.pageProps || {};
+  const { _uid, _uf = '' } = props?.pageProps || {};
   const loggedIn = _uid || false;
   const [logoutRequest] = useMutation(LOGOUT);
+  const capitaliseName = _uf && _uf?.[0]?.toUpperCase() + _uf?.slice(1);
+  
+  const addNavbarClass = classnames({ 'is-active': showNavbar });
 
   /**
    * handle logout call to GraphQL API
@@ -24,6 +28,10 @@ const Header = (props: any) => {
     Router.push('/');
   };
 
+  const toggleNavbar = () => {
+    setShowNavbar(!showNavbar);
+  };
+
   return (
     <div className="hero-head rc-Header">
       <nav className="navbar header-nav">
@@ -32,18 +40,22 @@ const Header = (props: any) => {
             <a className="navbar-item" href="/">
               <h2 className="subtitle has-text-weight-bold">Team App</h2>
             </a>
-            <span className="navbar-burger burger" data-target="navbarMenuHeroA">
+            <span
+              className={`navbar-burger burger ${addNavbarClass}`}
+              data-target="navbarMenuHeroA"
+              onClick={toggleNavbar}
+            >
               <span></span>
               <span></span>
               <span></span>
             </span>
           </div>
-          <div id="navbarMenuHeroA" className="navbar-menu">
+          <div id="navbarMenuHeroA" className={`navbar-menu ${addNavbarClass}`}>
             <div className="navbar-end">
               {/* <a className="navbar-item is-active">Home</a> */}
               {loggedIn ? (
                 <div className="navbar-item has-dropdown is-hoverable">
-                  <a className="navbar-link">{`${_uf}`}</a>
+                  <a className="navbar-link">{`${capitaliseName}`}</a>
                   <div className="navbar-dropdown">
                     <Link href="/profile">
                       <a className="navbar-item">Profile</a>

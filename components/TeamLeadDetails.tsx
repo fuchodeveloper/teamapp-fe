@@ -35,22 +35,22 @@ const TeamLeadDetails = (props: any) => {
               <thead>
                 <tr>
                   <th>
-                    <abbr title="Position">#</abbr>
+                    <abbr>S/N</abbr>
                   </th>
                   <th>
-                    <abbr title="Position">First Name</abbr>
+                    <abbr>First Name</abbr>
                   </th>
                   <th>
-                    <abbr title="Played">Last Name</abbr>
+                    <abbr>Last Name</abbr>
                   </th>
                   <th>
-                    <abbr title="Won">From</abbr>
+                    <abbr>From</abbr>
                   </th>
                   <th>
-                    <abbr title="Drawn">To</abbr>
+                    <abbr>To</abbr>
                   </th>
                   <th>
-                    <abbr title="Lost">Responsibilities</abbr>
+                    <abbr>Responsibilities</abbr>
                   </th>
                 </tr>
               </thead>

@@ -38,7 +38,7 @@ const ViewTeam = (props) => {
   return (
     <Fragment>
       <Header pageProps={props?.pageProps} />
-      <section className="section">
+      <section className="section" style={{ padding: '2rem 0.5rem' }}>
         <div className="container">
           <nav className="level">
             <div className="level-left">

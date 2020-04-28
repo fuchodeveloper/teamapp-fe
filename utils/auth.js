@@ -74,7 +74,7 @@ export const getUser = (ctx) => {
   // }
 
 
-  return user || { token: null };
+  return user || { user: null };
 };
 
 /**

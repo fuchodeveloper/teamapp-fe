@@ -13,16 +13,16 @@ const TeamDetails = ({ members }: { members: { id: string; length: number; map: 
               <thead>
                 <tr>
                   <th>
-                    <abbr title="Position">#</abbr>
+                    <abbr>S/N</abbr>
                   </th>
                   <th>
-                    <abbr title="Position">First Name</abbr>
+                    <abbr>First Name</abbr>
                   </th>
                   <th>
-                    <abbr title="Played">Last Name</abbr>
+                    <abbr>Last Name</abbr>
                   </th>
                   <th>
-                    <abbr title="Played">Email Address</abbr>
+                    <abbr>Email Address</abbr>
                   </th>
                 </tr>
               </thead>
