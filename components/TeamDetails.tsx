@@ -5,11 +5,9 @@ const TeamDetails = ({ members }: { members: { id: string; length: number; map: 
     <Fragment>
       <section className="section">
         <div className="container has-text-centered">
+          <h4 className="subtitle is-4 has-text-weight-bold align-left m-b-1">Team Roster</h4>
           <div className="table-container notification">
             <table className="table is-fullwidth is-striped bg-transparent">
-              <caption>
-                <h3 className="subtitle is-3 has-text-weight-bold align-left m-b-1">Team Roster</h3>
-              </caption>
               <thead>
                 <tr>
                   <th>

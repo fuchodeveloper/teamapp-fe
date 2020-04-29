@@ -3,12 +3,11 @@ import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import ApolloClient from 'apollo-client';
 
-let appUrl = '';
+const appUrl =
+  process.env.NODE_ENV === 'production' ? 'https://teamapp-be.herokuapp.com/' : 'http://localhost:4001/graphql';
 
 const httpLink = createHttpLink({
-  // uri: 'http://localhost:4001/graphql',
-  // uri: 'https://teamapp-be.now.sh/',
-  uri: 'https://teamapp-be.herokuapp.com/',
+  uri: appUrl,
   credentials: 'include',
 });
 

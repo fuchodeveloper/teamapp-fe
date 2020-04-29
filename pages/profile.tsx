@@ -88,7 +88,7 @@ const Profile = (props: any) => {
             <div className="card card-wrapper">
               <div className="card-content content-padding">
                 <div className="m-b-1">
-                  <h2 className="title">Teams</h2>
+                  <h2 className="title">My Team</h2>
                 </div>
                 <hr />
                 <div>
@@ -108,6 +108,16 @@ const Profile = (props: any) => {
                     </Link>
                   )}
                 </div>
+              </div>
+            </div>
+            <br />
+            <div className="card card-wrapper">
+              <div className="card-content content-padding">
+                <div className="m-b-1">
+                  <h2 className="title">Other Teams</h2>
+                </div>
+                <hr />
+                <p>You don't belong to any team.</p>
               </div>
             </div>
           </div>

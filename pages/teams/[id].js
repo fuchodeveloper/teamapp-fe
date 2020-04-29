@@ -53,11 +53,13 @@ const ViewTeam = (props) => {
               <p className="level-item">
                 Team ID: &nbsp; <strong>{team?.uniqueId || 'No id'}</strong>
               </p>
+              {/* 
+                TODO: add ability to copy team id using icon
               <p className="level-item">
                 <span className="icon">
                   <i className="far fa-copy"></i>
                 </span>
-              </p>
+              </p> */}
             </div>
           </nav>
 
