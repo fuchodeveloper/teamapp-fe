@@ -11,14 +11,14 @@ const CreateMembers = (props) => {
   // const loggedIn = pageProps?.loggedIn || false;
   const teamId = props?.pageProps?.id;
 
-  const [inputFields, setInputFields] = useState([{ firstName: '', lastName: '', email: '', team: '' }]);
+  const [inputFields, setInputFields] = useState([{ firstName: '', lastName: '', email: '', teamUniqueId: '' }]);
   const [createTeamMembers, { data: membersData, loading: membersLoading, error: membersError }] = useMutation(
     CREATE_TEAM_MEMBERS,
   );
 
   const [getTeam, { called, loading, data: teamData, error: teamError }] = useLazyQuery(GET_TEAM);
   const serverError = membersError?.graphQLErrors?.[0] || {};
-  const { code } = membersError?.graphQLErrors?.[0].extensions || {};
+  const { code } = membersError?.graphQLErrors?.[0]?.extensions || {};
 
   useEffect(() => {
     if (teamId) {
@@ -41,14 +41,14 @@ const CreateMembers = (props) => {
     } else if (event.target.name === 'email') {
       values[index].email = event.target.value;
     }
-    values[index].team = teamData?.team?.id;
+    values[index].teamUniqueId = teamData?.team?.uniqueId;
 
     setInputFields(values);
   };
 
   const handleAddFields = () => {
     const values = [...inputFields];
-    values.push({ firstName: '', lastName: '', email: '', team: '' });
+    values.push({ firstName: '', lastName: '', email: '', teamUniqueId: '' });
     setInputFields(values);
   };
 
@@ -177,7 +177,12 @@ const CreateMembers = (props) => {
                                         value={field.email}
                                         required
                                       />
-                                      <input name="team" className="input" type="hidden" value={field.team} />
+                                      <input
+                                        name="teamUniqueId"
+                                        className="input"
+                                        type="hidden"
+                                        value={field.teamUniqueId}
+                                      />
                                       <span className="icon is-small is-left">
                                         <i className="fas fa-envelope"></i>
                                       </span>
@@ -256,7 +261,7 @@ const CREATE_TEAM_MEMBERS = gql`
       firstName
       lastName
       email
-      team
+      teamUniqueId
     }
   }
 `;
@@ -265,6 +270,7 @@ const GET_TEAM = gql`
   query Team($id: ID!, $uniqueId: String!) {
     team(id: $id, uniqueId: $uniqueId) {
       id
+      uniqueId
     }
   }
 `;

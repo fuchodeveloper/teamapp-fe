@@ -134,7 +134,7 @@ const GET_TEAM = gql`
           firstName
           lastName
           email
-          team
+          teamUniqueId
         }
       }
       members {
@@ -142,7 +142,7 @@ const GET_TEAM = gql`
         firstName
         lastName
         email
-        team
+        teamUniqueId
       }
     }
   }

@@ -13,7 +13,7 @@ import errorMessages from '../errors';
 import { initialValues, signinSchema } from '../validation/signin';
 
 const SignIn = (props: any) => {
-  const { _uid  } = props?.pageProps;
+  const { _uid } = props?.pageProps;
 
   const [loginUser, { called, loading, data, error }] = useLazyQuery(SIGN_IN);
   const { code }: { [key: string]: string } = error?.graphQLErrors?.[0]?.extensions || {};
@@ -25,7 +25,8 @@ const SignIn = (props: any) => {
 
   if (loginStatus) {
     saveUser(data?.login);
-    Router.push('/profile');
+    // Router.push('/profile');
+    window.location.href = '/profile';
   }
 
   return (
@@ -127,7 +128,7 @@ const SignIn = (props: any) => {
                                     !!errors.email || !!errors.password ? 'theme-color-bg' : ''
                                   }`}
                                 >
-                                  Submit
+                                  Sign in
                                 </button>
                                 <Link href="/">
                                   <a className="button has-text-weight-bold theme-color-text">Go Back</a>
@@ -164,7 +165,6 @@ export const getServerSideProps = async (ctx: object) => {
   // Check user's session
   const session = getUser(ctx);
   console.log('session', session);
-  
 
   return {
     props: session,
