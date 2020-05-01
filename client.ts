@@ -5,7 +5,7 @@ import ApolloClient from 'apollo-client';
 
 const appUrl =
   process.env.NODE_ENV === 'production'
-    ? 'https://teamapp-be.herokuapp.com/' // https://teamapp-be.herokuapp.com/, https://teamapp-api.now.sh/dist
+    ? 'https://teamapp-api.now.sh/dist' // https://teamapp-be.herokuapp.com/, https://teamapp-api.now.sh/dist
     : 'http://localhost:4001/graphql';
 
 const httpLink = createHttpLink({
