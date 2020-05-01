@@ -23,10 +23,10 @@ const SignIn = (props: any) => {
 
   const loginStatus = data?.login?.id;
 
-  if (loginStatus) {
-    saveUser(data?.login);
-    Router.push('/profile');
-  }
+  // if (loginStatus) {
+  //   saveUser(data?.login);
+  //   Router.push('/profile');
+  // }
 
   return (
     <Fragment>
