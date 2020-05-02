@@ -130,8 +130,8 @@ const SignIn = (props: any) => {
                                 >
                                   Sign in
                                 </button>
-                                <Link href="/">
-                                  <a className="button has-text-weight-bold theme-color-text">Go Back</a>
+                                <Link href="/profile">
+                                  <a className="button has-text-weight-bold theme-color-text">Profile</a>
                                 </Link>
                               </div>
                             </div>
