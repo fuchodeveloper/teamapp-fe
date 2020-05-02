@@ -26,7 +26,7 @@ const SignIn = (props: any) => {
   if (loginStatus) {
     saveUser(data?.login);
     // Router.push('/profile');
-    window.location.href = '/profile';
+    // window.location.href = '/profile';
   }
 
   return (
