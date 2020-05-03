@@ -78,11 +78,11 @@ const TeamLeadDetails = (props: any) => {
             </table>
           </div>
           <div className="has-text-right">
-            <button className="button" onClick={() => toggleModal(true)}>
+            {/* <button className="button" onClick={() => toggleModal(true)}>
               Manage Team Lead
-            </button>
+            </button> */}
             <Link href={`/teams/${uniqueId}/manage`}>
-              <a className="button has-text-white has-text-weight-bold theme-color-bg no-border">Manage Details</a>
+              <a className="button has-text-white has-text-weight-bold theme-color-bg no-border">Edit Team</a>
             </Link>
           </div>
         </div>

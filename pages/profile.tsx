@@ -9,6 +9,7 @@ import Skeleton from 'react-loading-skeleton';
 import Header from '~/components/Header';
 import { authUser } from '~/components/interfaces/authUser';
 import { auth, getUser } from '~/utils/auth';
+import LoadingContainer from '~/components/LoadingContainer';
 
 const SigninPage: NextPage = dynamic(() => import('./signin'));
 
@@ -38,23 +39,8 @@ const Profile = (props: any) => {
     variables: { id: _uid, uniqueId: userData?.user?.team || '' },
   });
 
-  const loadingContainer = (
-    <Fragment>
-      <Header pageProps={props?.pageProps} />
-      <section className="section">
-        <div className="container">
-          <div className="card card-wrapper">
-            <div className="card-content content-padding">
-              <Skeleton count={5} />
-            </div>
-          </div>
-        </div>
-      </section>
-    </Fragment>
-  );
-
-  if (userLoading) return loadingContainer;
-  if (teamLoading) return loadingContainer;
+  if (userLoading) return <LoadingContainer pageProps={props?.pageProps} />;
+  if (teamLoading) return <LoadingContainer pageProps={props?.pageProps} />;
 
   if (teamError) return <div>An unexpected error occurred!</div>;
 

@@ -29,7 +29,6 @@ type Error = {
  * @param props value from parent
  */
 const ManageTeamLeadModal = (props: Props) => {
-  console.log('ManageTeamLeadModal:props', props);
   const { _uid, uniqueId } = props || {};
 
   const [createOrUpdateTeamLead, { data: teamLeadData, loading: teamLeadLoading, error: teamLeadError }] = useMutation(
