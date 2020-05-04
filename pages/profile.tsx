@@ -14,6 +14,8 @@ import LoadingContainer from '~/components/LoadingContainer';
 const SigninPage: NextPage = dynamic(() => import('./signin'));
 
 const Profile = (props: any) => {
+  console.log('props', props);
+  
   const { _uid } = props?.pageProps;
   const loggedIn = _uid || false;
   
@@ -136,13 +138,18 @@ const GET_USER = gql`
   }
 `;
 
-export const getServerSideProps = async (ctx: any) => {
-  // Check user's session
+Profile.getInitialProps = async (ctx: any) => {
   const session = getUser(ctx);
-
-  return {
-    props: session,
-  };
+  return session;
 };
+
+// export const getServerSideProps = async (ctx: any) => {
+//   // Check user's session
+//   const session = getUser(ctx);
+
+//   return {
+//     props: session,
+//   };
+// };
 
 export default Profile;

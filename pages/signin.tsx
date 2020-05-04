@@ -160,13 +160,18 @@ const SIGN_IN = gql`
   }
 `;
 
-export const getServerSideProps = async (ctx: object) => {
-  // Check user's session
+SignIn.getInitialProps = async (ctx: any) => {
   const session = getUser(ctx);
-  
-  return {
-    props: session,
-  };
+  return session;
 };
+
+// export const getServerSideProps = async (ctx: object) => {
+//   // Check user's session
+//   const session = getUser(ctx);
+  
+//   return {
+//     props: session,
+//   };
+// };
 
 export default SignIn;
