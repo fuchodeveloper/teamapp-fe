@@ -3,13 +3,13 @@ import { gql } from 'apollo-boost';
 import classnames from 'classnames';
 import { addDays } from 'date-fns';
 import { Formik } from 'formik';
+import Link from 'next/link';
 import { Fragment, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
-import Skeleton from 'react-loading-skeleton';
 import Header from '~/components/Header';
+import LoadingContainer from '~/components/LoadingContainer';
 import { getUser } from '~/utils/auth';
 import { manageTeamLeadSchema } from '~/validation/team';
-import LoadingContainer from '~/components/LoadingContainer';
 
 type Props = {
   pageProps: {
@@ -61,6 +61,7 @@ const Manage = (props: Props) => {
   }, [teamData?.team, newDuties]);
 
   const showModalClass = classnames({ 'is-active': showModal });
+  const dynamicClasses = classnames({ 'is-loading': teamLeadLoading });
 
   if (teamLoading) return <LoadingContainer pageProps={props?.pageProps} />;
   if (teamLLoading) return <LoadingContainer pageProps={props?.pageProps} />;
@@ -114,6 +115,20 @@ const Manage = (props: Props) => {
       <section className="hero">
         <div className="hero-body">
           <div className="container">
+            <div className="card-wrapper align-container-right">
+              <div style={{ marginBottom: '0.5rem' }}>
+                <p className="buttons">
+                  <Link href={`/teams/${teamId}`}>
+                    <button className="button">
+                      <span className="icon">
+                        <i className="fas fa-arrow-left"></i>
+                      </span>
+                      <span>Back to team</span>
+                    </button>
+                  </Link>
+                </p>
+              </div>
+            </div>
             <div className="card card-wrapper">
               <Formik
                 initialValues={{ name: '', start: '', stop: '', duties: '' }}
@@ -152,7 +167,7 @@ const Manage = (props: Props) => {
                           <h2 className="title">Team Lead</h2>
                         </div>
                         <hr />
-                        <div className="field is-horizontal">
+                        <div className="field is-horizontal" style={{ marginBottom: '2rem' }}>
                           <div className="field-body">
                             <div className="field">
                               <label className="label">Name</label>
@@ -160,7 +175,6 @@ const Manage = (props: Props) => {
                                 <span className="select is-fullwidth">
                                   <select
                                     name="name"
-                                    // defaultValue={`${teamState?.teamLead?.user?.firstName}`}
                                     value={values.name}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -179,11 +193,7 @@ const Manage = (props: Props) => {
                                       );
                                     })}
                                   </select>
-                                  {errors.name && touched.name ? (
-                                    <span className="help is-danger">{errors.name}</span>
-                                  ) : (
-                                    <br />
-                                  )}
+                                  {errors.name && touched.name && <span className="help is-danger">{errors.name}</span>}
                                 </span>
                                 <span className="icon is-small is-left">
                                   <i className="fas fa-user" />
@@ -209,10 +219,8 @@ const Manage = (props: Props) => {
                                 <span className="icon is-small is-left">
                                   <i className="fas fa-calendar" />
                                 </span>
-                                {errors.start && touched.start ? (
+                                {errors.start && touched.start && (
                                   <span className="help is-danger">{errors.start}</span>
-                                ) : (
-                                  <br />
                                 )}
                               </div>
                             </div>
@@ -236,11 +244,7 @@ const Manage = (props: Props) => {
                                 <span className="icon is-small is-left">
                                   <i className="fas fa-calendar" />
                                 </span>
-                                {errors.stop && touched.stop ? (
-                                  <span className="help is-danger">{errors.stop}</span>
-                                ) : (
-                                  <br />
-                                )}
+                                {errors.stop && touched.stop && <span className="help is-danger">{errors.stop}</span>}
                               </div>
                             </div>
                           </div>
@@ -267,20 +271,16 @@ const Manage = (props: Props) => {
                           <div className="display-flex">
                             <button
                               type="submit"
-                              className="button has-text-white has-text-weight-bold theme-color-bg no-border m-r-1"
+                              className={`button has-text-white has-text-weight-bold theme-color-bg no-border m-r-1 ${dynamicClasses}`}
                               disabled={isSubmitting}
                             >
                               Submit
                             </button>
                             <button
-                              onClick={handleReset}
-                              type="reset"
-                              // onClick={() =>
-                              //   setTeamState({
-                              //     duties: teamState?.duties,
-                              //     teamLead: { user: { firstName: '' }, lead: { start: teamState?.teamLead?.lead?.start } },
-                              //   })
-                              // }
+                              onClick={() => {
+                                handleReset();
+                              }}
+                              type="button"
                               className="button"
                             >
                               Cancel
@@ -327,7 +327,7 @@ const Manage = (props: Props) => {
                                   <td>{member.email}</td>
                                   <td style={{ paddingLeft: '2rem' }}>
                                     <span
-                                      className="icon is-small"
+                                      className="icon is-small has-text-danger"
                                       style={{ cursor: 'pointer' }}
                                       onClick={() => toggleModal(true)}
                                     >
@@ -363,7 +363,7 @@ const Manage = (props: Props) => {
                   <div className="field-body">
                     <div className="field">
                       <div>
-                        Delete team <input type="checkbox" name="" id="" />
+                        <input type="checkbox" name="" id="" /> <span>Delete team</span>
                       </div>
                     </div>
                   </div>

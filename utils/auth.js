@@ -61,6 +61,8 @@ export const getUser = (ctx) => {
   const authRoutes = ['/profile'];
 
   const user = nextCookie(ctx);
+  console.log('user', user, 'ctx', ctx);
+  
   if (ctx?.req && !user?._uid && !guestRoutes.includes(ctx?.req?.url)) {
     ctx.res.writeHead(302, { Location: '/signin' });
     ctx.res.end();

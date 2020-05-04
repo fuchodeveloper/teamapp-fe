@@ -163,9 +163,7 @@ const SIGN_IN = gql`
 export const getServerSideProps = async (ctx: object) => {
   // Check user's session
   const session = getUser(ctx);
-  console.log('session', session);
   
-
   return {
     props: session,
   };

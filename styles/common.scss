@@ -39,6 +39,12 @@
   text-align: left;
 }
 
+.align-container-right {
+  max-width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
 .bg-transparent {
   background-color: transparent;
 }

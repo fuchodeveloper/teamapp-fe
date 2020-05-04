@@ -1,10 +1,10 @@
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import React, { Fragment } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import Header from '~/components/Header';
+import LoadingContainer from '~/components/LoadingContainer';
 import TeamDetails from '~/components/TeamDetails';
 import TeamLeadDetails from '~/components/TeamLeadDetails';
 import { getUser } from '~/utils/auth';
@@ -19,17 +19,7 @@ const ViewTeam = (props) => {
     variables: { id: _uid, uniqueId: teamId },
   });
 
-  const loadingContainer = (
-    <Fragment>
-      <Header />
-      <section className="section">
-        <Skeleton count={5} />
-        <div className="container"></div>
-      </section>
-    </Fragment>
-  );
-
-  if (teamLoading) return loadingContainer;
+  if (teamLoading) return <LoadingContainer pageProps={props?.pageProps} />;
 
   if (teamError) return <div>An unexpected error occurred!</div>;
 
