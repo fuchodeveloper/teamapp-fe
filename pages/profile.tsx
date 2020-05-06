@@ -14,24 +14,8 @@ import LoadingContainer from '~/components/LoadingContainer';
 const SigninPage: NextPage = dynamic(() => import('./signin'));
 
 const Profile = (props: any) => {
-  console.log('props', props);
-  
-  const { _uid } = props?.pageProps;
+  const { _uid } = props?.pageProps || {};
   const loggedIn = _uid || false;
-  
-  // useEffect(() => {
-  //   if (loggedIn) return; // do nothing if the user is logged in
-  //   Router.replace('/profile', '/signin', { shallow: true });
-  // }, [loggedIn]);
-  // useEffect(() => {
-  //   console.log('loggedIn:useEffect:ptopss', pageProps);
-
-  // }, [pageProps])
-
-  // useEffect(() => {
-  //   if (loggedIn) return;
-  //   Router.push('/signin');
-  // }, [loggedIn])
 
   const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {
     variables: { id: _uid },
@@ -69,7 +53,7 @@ const Profile = (props: any) => {
                   </p>
                 </div>
                 <br />
-                <button className="button has-text-weight-bold" disabled>Manage Details</button>
+                {/* <button className="button has-text-weight-bold" disabled>Manage Details</button> */}
               </div>
             </div>
             <br />
@@ -138,18 +122,13 @@ const GET_USER = gql`
   }
 `;
 
-Profile.getInitialProps = async (ctx: any) => {
+export const getServerSideProps = async (ctx: any) => {
+  // Check user's session
   const session = getUser(ctx);
-  return session;
+
+  return {
+    props: session,
+  };
 };
-
-// export const getServerSideProps = async (ctx: any) => {
-//   // Check user's session
-//   const session = getUser(ctx);
-
-//   return {
-//     props: session,
-//   };
-// };
 
 export default Profile;

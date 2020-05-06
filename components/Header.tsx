@@ -13,7 +13,7 @@ const Header = (props: any) => {
   const loggedIn = _uid || false;
   const [logoutRequest] = useMutation(LOGOUT);
   const capitaliseName = _uf && _uf?.[0]?.toUpperCase() + _uf?.slice(1);
-  
+
   const addNavbarClass = classnames({ 'is-active': showNavbar });
 
   /**
@@ -69,12 +69,12 @@ const Header = (props: any) => {
                 </div>
               ) : (
                 <>
-                  <Link href="/signin">
-                    <a className="navbar-item">Sign In</a>
-                  </Link>
-                  <Link href="/signup">
-                    <a className="navbar-item">Sign Up</a>
-                  </Link>
+                  <a className="navbar-item" href="/signin">
+                    Sign In
+                  </a>
+                  <a className="navbar-item" href="/signup">
+                    Sign Up
+                  </a>
                 </>
               )}
             </div>

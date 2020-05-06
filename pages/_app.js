@@ -1,8 +1,8 @@
 import { ApolloProvider } from '@apollo/react-hooks';
+import App from 'next/app';
 import React from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { client } from '../client';
-import { auth } from '~/utils/auth';
 import '../node_modules/@fortawesome/fontawesome-free/js/all';
 import '../styles/index.scss';
 
@@ -14,29 +14,43 @@ function MyApp({ Component, ...pageProps }) {
   );
 }
 
-// export const getServerSideProps = async (ctx) => {
-//   // Check user's session
-//   const session = auth(ctx);
-
-//   console.log('MyApp.getServerSideProps:token', session);
-//   return {
-//     props: session,
-//   };
-// };
-
-// MyApp.getInitialProps = async (ctx) => {
-//   //  if (process.browser) {
-//   //    history.go();
-//   //  }
-
-//   // Check user's session
-//   const token = auth(ctx?.ctx || ctx) || '';
-
-//   console.log('MyApp.getInitialProps:ctx', ctx?.ctx?.req?.headers?.cookie, 'MyApp:token', token);
-//   return token;
-//   // return {
-//   //   props: { token },
-//   // };
-// };
-
 export default MyApp;
+
+// TODO: handle all errors in the app
+
+// class MyApp extends App {
+//   static async getInitialProps({ Component, ctx }) {
+//     let pageProps = {};
+
+//     if (Component.getInitialProps) {
+//       pageProps = await Component.getInitialProps(ctx);
+//     }
+
+//     return { pageProps };
+//   }
+
+//   componentDidCatch(error, errorInfo) {
+//     Sentry.withScope((scope) => {
+//       Object.keys(errorInfo).forEach((key) => {
+//         scope.setExtra(key, errorInfo[key]);
+//       });
+
+//       Sentry.captureException(error);
+//     });
+
+//     super.componentDidCatch(error, errorInfo);
+//   }
+
+//   render() {
+//     const { Component, pageProps } = this.props;
+
+//     return (
+//       <Container>
+//         <Component {...pageProps} />
+//       </Container>
+//     );
+//   }
+// }
+
+
+// export default MyApp;

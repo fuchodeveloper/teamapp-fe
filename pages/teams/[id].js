@@ -13,7 +13,7 @@ const ViewTeam = (props) => {
   /**
    * team id represented as `id`
    */
-  const { teamId, _uid } = props?.pageProps;
+  const { teamId, _uid } = props?.pageProps || {};
 
   const { data: teamData, loading: teamLoading, error: teamError } = useQuery(GET_TEAM, {
     variables: { id: _uid, uniqueId: teamId },

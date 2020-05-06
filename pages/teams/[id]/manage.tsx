@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
 import classnames from 'classnames';
 import { addDays } from 'date-fns';
 import { Formik } from 'formik';
@@ -10,6 +9,7 @@ import Header from '~/components/Header';
 import LoadingContainer from '~/components/LoadingContainer';
 import { getUser } from '~/utils/auth';
 import { manageTeamLeadSchema } from '~/validation/team';
+import { GET_TEAM, GET_TEAM_LEAD, MANAGE_TEAMLEAD, DELETE_MEMBER } from '~/utils/manageTeamUtil';
 
 type Props = {
   pageProps: {
@@ -32,11 +32,21 @@ type Context = {
 const Manage = (props: Props) => {
   const initialState = {
     duties: '',
+    members: [],
     teamLead: { user: { firstName: '' }, lead: { start: '', stop: '' } },
+    teamMembers: [],
   };
   const { teamId, _uid } = props?.pageProps;
+
+  // component states: show/hide delete modal, team and delete modal data
   const [showModal, setShowModal] = useState(false);
   const [teamState, setTeamState] = useState(initialState);
+  const [modalState, setModalState] = useState({
+    memberId: '',
+    memberEmail: '',
+    uniqueId: '',
+    creator: '',
+  });
 
   const { data: teamData, loading: teamLoading, error: teamError } = useQuery(GET_TEAM, {
     variables: { id: _uid, uniqueId: teamId },
@@ -49,8 +59,15 @@ const Manage = (props: Props) => {
   const [createOrUpdateTeamLead, { data: teamLeadData, loading: teamLeadLoading, error: teamLeadError }] = useMutation(
     MANAGE_TEAMLEAD,
   );
-  const newDuties = teamLeadData?.createOrUpdateTeamLead?.duties;
+  const [deleteMember, { data: deleteData, loading: deleteLoading, error: deleteError }] = useMutation(DELETE_MEMBER);
 
+  const newDuties = teamLeadData?.createOrUpdateTeamLead?.duties;
+  const updatedTeamUsers = deleteData?.deleteUser;
+
+  /**
+   * Handle changes in state based on returned data
+   * re-hydrate component state using updated data from server
+   */
   useEffect(() => {
     if (teamData?.team) {
       setTeamState({ ...teamData?.team });
@@ -58,10 +75,18 @@ const Manage = (props: Props) => {
     if (newDuties) {
       setTeamState({ ...teamData?.team, duties: newDuties });
     }
-  }, [teamData?.team, newDuties]);
+    if (updatedTeamUsers?.length || updatedTeamUsers?.length === 0) {
+      setTeamState({ ...teamData?.team, members: [...updatedTeamUsers] });
+    }
+    if (updatedTeamUsers) {
+      setShowModal(false);
+    }
+  }, [teamData?.team, newDuties, updatedTeamUsers]);
+
+  console.log('teamState', teamState, updatedTeamUsers, deleteLoading, deleteError);
 
   const showModalClass = classnames({ 'is-active': showModal });
-  const dynamicClasses = classnames({ 'is-loading': teamLeadLoading });
+  const teamLeadLoadingClass = classnames({ 'is-loading': teamLeadLoading });
 
   if (teamLoading) return <LoadingContainer pageProps={props?.pageProps} />;
   if (teamLLoading) return <LoadingContainer pageProps={props?.pageProps} />;
@@ -69,13 +94,21 @@ const Manage = (props: Props) => {
   // if (teamError) return <div>An unexpected error occurred!</div>;
 
   const { team } = teamData || {};
-  const { members, uniqueId } = team || {};
+  const { uniqueId } = team || {};
+  const members = teamState?.members || [];
 
   const toggleModal = (val: boolean) => {
     setShowModal(val);
   };
 
-  const renderModal = () => {
+  const handleDelete = (state: boolean, memberId: string, memberEmail: string) => {
+    toggleModal(state);
+    setModalState({ memberId, memberEmail, uniqueId, creator: _uid });
+  };
+
+  const TeamRosterModal = (props: any) => {
+    const { toggleModal, showModalClass, modalState } = props || {};
+
     return (
       <div className={`modal ${showModalClass}`}>
         <div className="modal-background" onClick={() => toggleModal(false)}></div>
@@ -86,9 +119,22 @@ const Manage = (props: Props) => {
           </header>
           <section className="modal-card-body">
             <div className="field">
-              <p>Do you want to remove john@doe.com from the team?</p>
+              <p className="subtitle">
+                Do you want to remove <strong>{modalState?.memberEmail}</strong> from the team?
+              </p>
               <div className="buttons">
-                <button className="button is-danger">
+                <button
+                  className="button is-danger"
+                  onClick={() =>
+                    deleteMember({
+                      variables: {
+                        uniqueId: modalState?.uniqueId,
+                        userId: modalState?.memberId,
+                        creator: modalState?.creator,
+                      },
+                    })
+                  }
+                >
                   <span className="icon is-small">
                     <i className="fas fa-check"></i>
                   </span>
@@ -271,7 +317,7 @@ const Manage = (props: Props) => {
                           <div className="display-flex">
                             <button
                               type="submit"
-                              className={`button has-text-white has-text-weight-bold theme-color-bg no-border m-r-1 ${dynamicClasses}`}
+                              className={`button has-text-white has-text-weight-bold theme-color-bg no-border m-r-1 ${teamLeadLoadingClass}`}
                               disabled={isSubmitting}
                             >
                               Submit
@@ -329,12 +375,11 @@ const Manage = (props: Props) => {
                                     <span
                                       className="icon is-small has-text-danger"
                                       style={{ cursor: 'pointer' }}
-                                      onClick={() => toggleModal(true)}
+                                      onClick={() => handleDelete(true, member.id, member.email)}
                                     >
                                       <i className="fas fa-trash-alt" />
                                     </span>
                                   </td>
-                                  {showModal && renderModal()}
                                 </tr>
                               );
                             },
@@ -349,12 +394,19 @@ const Manage = (props: Props) => {
                       )}
                     </tbody>
                   </table>
+                  {showModal && (
+                    <TeamRosterModal
+                      toggleModal={toggleModal}
+                      showModalClass={showModalClass}
+                      modalState={modalState}
+                    />
+                  )}
                 </div>
               </div>
             </div>
             <br />
             <div className="card card-wrapper">
-              <div className="card-content content-padding">
+              <div className="card-content content-padding danger-wrapper">
                 <div className="m-b-1">
                   <h2 className="title">Danger Zone</h2>
                 </div>
@@ -380,76 +432,6 @@ const Manage = (props: Props) => {
     </>
   );
 };
-
-const GET_TEAM = gql`
-  query Team($id: ID!, $uniqueId: String!) {
-    team(id: $id, uniqueId: $uniqueId) {
-      id
-      name
-      duties
-      creator
-      uniqueId
-      teamLead {
-        lead {
-          id
-          teamUniqueId
-          start
-          stop
-        }
-        user {
-          id
-          firstName
-          lastName
-          email
-          teamUniqueId
-        }
-      }
-      members {
-        id
-        firstName
-        lastName
-        email
-        teamUniqueId
-      }
-    }
-  }
-`;
-
-const MANAGE_TEAMLEAD = gql`
-  mutation createOrUpdateTeamLead($input: CreateOrUpdateTeamLeadInput!) {
-    createOrUpdateTeamLead(input: $input) {
-      id
-      teamUniqueId
-      creator
-      start
-      stop
-      user {
-        id
-        firstName
-        lastName
-      }
-      duties
-    }
-  }
-`;
-
-const GET_TEAM_LEAD = gql`
-  query GetTeamLead($input: GetTeamLeadInput!) {
-    getTeamLead(input: $input) {
-      id
-      teamUniqueId
-      creator
-      start
-      stop
-      user {
-        id
-        firstName
-        lastName
-      }
-      duties
-    }
-  }
-`;
 
 export async function getServerSideProps(ctx: Context) {
   // Check user's session
