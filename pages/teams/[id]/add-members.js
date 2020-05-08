@@ -2,6 +2,7 @@ import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import { Formik } from 'formik';
 import Router from 'next/router';
+import Link from 'next/link';
 import { Fragment, useEffect, useState } from 'react';
 import Header from '~/components/Header';
 import { getUser } from '~/utils/auth';
@@ -235,8 +236,13 @@ const CreateMembers = (props) => {
                                   type="submit"
                                   className="button has-text-white has-text-weight-bold theme-color-bg m-r-1 no-border"
                                 >
-                                  Create Members
+                                  Add Members
                                 </button>
+                                <Link href={`/teams/${teamId}/manage`}>
+                                  <a className="button has-text-weight-bold">
+                                    Go Back
+                                  </a>
+                                </Link>
                               </div>
                             </div>
                           </div>

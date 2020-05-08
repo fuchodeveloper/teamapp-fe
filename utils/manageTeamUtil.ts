@@ -1,4 +1,4 @@
-import { gql } from "apollo-boost";
+import { gql } from 'apollo-boost';
 
 export const GET_TEAM = gql`
   query Team($id: ID!, $uniqueId: String!) {
@@ -78,6 +78,14 @@ export const DELETE_MEMBER = gql`
       lastName
       email
       teamUniqueId
+    }
+  }
+`;
+
+export const DELETE_TEAM = gql`
+  mutation deleteTeam($uniqueId: String!, $creator: String!) {
+    deleteTeam(uniqueId: $uniqueId, creator: $creator) {
+      success
     }
   }
 `;

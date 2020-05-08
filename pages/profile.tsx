@@ -1,17 +1,9 @@
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
-import { GetServerSideProps, NextPage } from 'next';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import Router from 'next/router';
-import { Fragment, useEffect } from 'react';
-import Skeleton from 'react-loading-skeleton';
 import Header from '~/components/Header';
-import { authUser } from '~/components/interfaces/authUser';
-import { auth, getUser } from '~/utils/auth';
 import LoadingContainer from '~/components/LoadingContainer';
-
-const SigninPage: NextPage = dynamic(() => import('./signin'));
+import { getUser } from '~/utils/auth';
 
 const Profile = (props: any) => {
   const { _uid } = props?.pageProps || {};
@@ -20,7 +12,7 @@ const Profile = (props: any) => {
   const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {
     variables: { id: _uid },
   });
-  
+
   const { data: teamData, loading: teamLoading, error: teamError } = useQuery(GET_TEAM, {
     variables: { id: _uid, uniqueId: userData?.user?.team || '' },
   });

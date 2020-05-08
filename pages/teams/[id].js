@@ -75,7 +75,7 @@ const ViewTeam = (props) => {
                         <img src="/images/empty.png" />
                       </figure>
                     </div>
-                    <Link href={`/teams/${teamId}/create-members`}>
+                    <Link href={`/teams/${teamId}/add-members`}>
                       <a className="button theme-color-bg has-text-white has-text-weight-bold">Create Team Members</a>
                     </Link>
                   </div>

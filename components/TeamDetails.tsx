@@ -53,11 +53,6 @@ const TeamDetails = ({ members }: { members: { id: string; length: number; map: 
               </tbody>
             </table>
           </div>
-          <div className="has-text-right">
-            <button className="button" disabled>
-              Add Team Members
-            </button>
-          </div>
         </div>
       </section>
     </Fragment>

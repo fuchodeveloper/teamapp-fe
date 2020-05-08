@@ -9,7 +9,9 @@ import Header from '~/components/Header';
 import LoadingContainer from '~/components/LoadingContainer';
 import { getUser } from '~/utils/auth';
 import { manageTeamLeadSchema } from '~/validation/team';
-import { GET_TEAM, GET_TEAM_LEAD, MANAGE_TEAMLEAD, DELETE_MEMBER } from '~/utils/manageTeamUtil';
+import { GET_TEAM, GET_TEAM_LEAD, MANAGE_TEAMLEAD, DELETE_MEMBER, DELETE_TEAM } from '~/utils/manageTeamUtil';
+import Router from 'next/router';
+import NotFound from '~/components/team/NotFound';
 
 type Props = {
   pageProps: {
@@ -47,6 +49,7 @@ const Manage = (props: Props) => {
     uniqueId: '',
     creator: '',
   });
+  const [showDeleteTeamModal, setShowDeleteTeamModal] = useState(false);
 
   const { data: teamData, loading: teamLoading, error: teamError } = useQuery(GET_TEAM, {
     variables: { id: _uid, uniqueId: teamId },
@@ -60,6 +63,9 @@ const Manage = (props: Props) => {
     MANAGE_TEAMLEAD,
   );
   const [deleteMember, { data: deleteData, loading: deleteLoading, error: deleteError }] = useMutation(DELETE_MEMBER);
+  const [deleteTeam, { data: deleteTeamData, loading: deleteTeamLoading, error: deleteTeamError }] = useMutation(
+    DELETE_TEAM,
+  );
 
   const newDuties = teamLeadData?.createOrUpdateTeamLead?.duties;
   const updatedTeamUsers = deleteData?.deleteUser;
@@ -83,9 +89,12 @@ const Manage = (props: Props) => {
     }
   }, [teamData?.team, newDuties, updatedTeamUsers]);
 
-  console.log('teamState', teamState, updatedTeamUsers, deleteLoading, deleteError);
+  if (deleteTeamData?.deleteTeam?.success) {
+    Router.push('/profile');
+  }
 
   const showModalClass = classnames({ 'is-active': showModal });
+  const showDeleteTeamModalClass = classnames({ 'is-active': showDeleteTeamModal });
   const teamLeadLoadingClass = classnames({ 'is-loading': teamLeadLoading });
 
   if (teamLoading) return <LoadingContainer pageProps={props?.pageProps} />;
@@ -96,14 +105,22 @@ const Manage = (props: Props) => {
   const { team } = teamData || {};
   const { uniqueId } = team || {};
   const members = teamState?.members || [];
+  console.log('team', team);
 
   const toggleModal = (val: boolean) => {
     setShowModal(val);
+  };
+  const toggleDeleteTeamModal = (val: boolean) => {
+    setShowDeleteTeamModal(val);
   };
 
   const handleDelete = (state: boolean, memberId: string, memberEmail: string) => {
     toggleModal(state);
     setModalState({ memberId, memberEmail, uniqueId, creator: _uid });
+  };
+
+  const handleDeleteTeam = (state: boolean) => {
+    toggleDeleteTeamModal(state);
   };
 
   const TeamRosterModal = (props: any) => {
@@ -154,6 +171,53 @@ const Manage = (props: Props) => {
       </div>
     );
   };
+
+  const DeleteTeamModal = () => {
+    return (
+      <div className={`modal ${showDeleteTeamModalClass}`}>
+        <div className="modal-background" onClick={() => toggleDeleteTeamModal(false)}></div>
+        <div className="modal-card">
+          <header className="modal-card-head">
+            <p className="modal-card-title">Confirm Action</p>
+            <button className="delete" aria-label="close" onClick={() => toggleDeleteTeamModal(false)}></button>
+          </header>
+          <section className="modal-card-body">
+            <div className="field">
+              <p className="subtitle">
+                Do you want to delete <strong>{team?.name}</strong>? This action is irreversible.
+              </p>
+              <div className="buttons">
+                <button
+                  className="button is-danger"
+                  onClick={() => deleteTeam({ variables: { uniqueId, creator: _uid } })}
+                >
+                  <span className="icon is-small">
+                    <i className="fas fa-check"></i>
+                  </span>
+                  <span>Yes</span>
+                </button>
+                <button className="button is-outlined" onClick={() => toggleDeleteTeamModal(false)}>
+                  <span aria-label="close">No</span>
+                  <span className="icon is-small">
+                    <i className="fas fa-times"></i>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
+        <button
+          className="modal-close is-large"
+          aria-label="close"
+          onClick={() => toggleDeleteTeamModal(false)}
+        ></button>
+      </div>
+    );
+  };
+
+  if (!team?.id) {
+    return <NotFound pageProps={props?.pageProps} />;
+  }
 
   return (
     <>
@@ -401,6 +465,11 @@ const Manage = (props: Props) => {
                       modalState={modalState}
                     />
                   )}
+                  <div className="has-text-right">
+                    <Link href={`/teams/${uniqueId}/add-members`}>
+                      <a className="button has-text-weight-bold">Add Team Members</a>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
@@ -414,16 +483,25 @@ const Manage = (props: Props) => {
                 <div className="field is-horizontal">
                   <div className="field-body">
                     <div className="field">
-                      <div>
-                        <input type="checkbox" name="" id="" /> <span>Delete team</span>
+                      <div className="space-text">
+                        <div>
+                          <strong>Delete Team</strong>
+                          <p>Once you delete a team, there is no going back. Please be sure.</p>
+                        </div>
+                        <div>
+                          <button
+                            className="button has-text-weight-bold is-danger"
+                            onClick={() => handleDeleteTeam(true)}
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
                 <br />
-                <div className="has-text-right">
-                  <button className="button has-text-weight-bold is-danger">Delete</button>
-                </div>
+                {showDeleteTeamModal && <DeleteTeamModal />}
               </div>
             </div>
           </div>
