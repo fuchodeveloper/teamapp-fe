@@ -75,6 +75,8 @@ const Profile = (props: any) => {
               </div>
             </div>
             <br />
+            {/* 
+              TODO: Implement other teams
             <div className="card card-wrapper">
               <div className="card-content content-padding">
                 <div className="m-b-1">
@@ -83,7 +85,7 @@ const Profile = (props: any) => {
                 <hr />
                 <p>You don't belong to any team.</p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
