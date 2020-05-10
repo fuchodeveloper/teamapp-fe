@@ -1,7 +1,6 @@
 import { useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import classnames from 'classnames';
-import Link from 'next/link';
 import Router from 'next/router';
 import React, { useState } from 'react';
 import { removeUser } from '~/utils/auth';
@@ -57,9 +56,9 @@ const Header = (props: any) => {
                 <div className="navbar-item has-dropdown is-hoverable">
                   <a className="navbar-link">{`${capitaliseName}`}</a>
                   <div className="navbar-dropdown">
-                    <Link href="/profile">
-                      <a className="navbar-item">Profile</a>
-                    </Link>
+                    <a className="navbar-item" href="/profile">
+                      Profile
+                    </a>
 
                     <hr className="navbar-divider" />
                     <a onClick={() => logoutHandler()} className="navbar-item has-text-danger">

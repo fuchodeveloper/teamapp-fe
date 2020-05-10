@@ -1,13 +1,12 @@
 import { useMutation, useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import { Field, Formik } from 'formik';
-import { GetServerSideProps, NextPage } from 'next';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Router from 'next/router';
-import { Fragment, Context } from 'react';
-import { authUser } from '~/components/interfaces/authUser';
-import { auth, getUser } from '~/utils/auth';
+import { Fragment } from 'react';
+import classnames from 'classnames';
+import LoadingContainer from '~/components/LoadingContainer';
+import { getUser } from '~/utils/auth';
 import Header from '../components/Header';
 import { initialValues, teamSchema } from '../validation/team';
 
@@ -18,9 +17,15 @@ const CreateTeam = (props: any) => {
     variables: { id: _uid || '' },
   });
   const teamId = teamData?.createTeam?.uniqueId;
+  const hasTeam = userData?.user?.team;
+  const loadingClass = classnames({ 'is-loading': teamLoading });
 
   if (teamId) {
     Router.push(`/teams/${teamId}`);
+  }
+
+  if (userLoading) {
+    return <LoadingContainer pageProps={props?.pageProps} />;
   }
 
   return (
@@ -48,13 +53,21 @@ const CreateTeam = (props: any) => {
                 }}
               >
                 {({ errors, touched, handleSubmit, isSubmitting, values, handleBlur, handleChange }) => {
-                  const disabledState = !!errors.name || !!errors.duties;
+                  const disabledState = !!errors.name || !!errors.duties || hasTeam;
                   return (
                     <form onSubmit={handleSubmit}>
                       <div className="card-content content-padding">
                         <div className="has-text-centered m-b-3">
                           <h2 className="title">Create New Team</h2>
                         </div>
+                        {hasTeam && (
+                          <div className="notification is-info is-light">
+                            <p>
+                              You have already created a team.{' '}
+                              <a href={`/teams/${userData?.user?.team}`}>Go to team.</a>
+                            </p>
+                          </div>
+                        )}
                         <div className="field is-horizontal m-b-2">
                           <div className="field-label is-normal">
                             <label className="label">Team Name</label>
@@ -63,7 +76,7 @@ const CreateTeam = (props: any) => {
                             <div className="field is-expanded">
                               <div className="field">
                                 <p className="control is-expanded">
-                                  <Field name="name" className="input" required />
+                                  <Field name="name" className="input" required disabled={hasTeam} />
                                 </p>
                               </div>
                               {errors.name && touched.name ? (
@@ -88,6 +101,7 @@ const CreateTeam = (props: any) => {
                                   value={values.duties}
                                   placeholder="Enter description of duties, responsibilities or a link to an exising document."
                                   required
+                                  disabled={hasTeam}
                                 />
                               </div>
                               {errors.duties && touched.duties ? (
@@ -105,9 +119,9 @@ const CreateTeam = (props: any) => {
                             <div className="field">
                               <div className="control has-text-right">
                                 <button
-                                  disabled={isSubmitting || disabledState}
+                                  disabled={isSubmitting || disabledState || loadingClass}
                                   type="submit"
-                                  className="button has-text-white has-text-weight-bold theme-color-bg m-r-1 no-border"
+                                  className={`button has-text-white has-text-weight-bold theme-color-bg m-r-1 no-border ${loadingClass}`}
                                 >
                                   Submit
                                 </button>
@@ -149,6 +163,7 @@ const GET_USER = gql`
       id
       firstName
       lastName
+      team
     }
   }
 `;

@@ -38,10 +38,10 @@ const Profile = (props: any) => {
                 <hr />
                 <div>
                   <p>
-                    <strong>Name:</strong> {`${userData?.user?.firstName} ${userData?.user?.lastName}`}
+                    <strong>Name:</strong> {`${userData?.user?.firstName || ''} ${userData?.user?.lastName || ''}`}
                   </p>
                   <p>
-                    <strong>Email:</strong> {`${userData?.user?.email}`}
+                    <strong>Email:</strong> {`${userData?.user?.email || ''}`}
                   </p>
                 </div>
                 <br />
@@ -63,9 +63,14 @@ const Profile = (props: any) => {
                 <br />
                 <div className="buttons">
                   {team?.id ? (
-                    <Link href={`/teams/${team?.uniqueId}`}>
-                      <a className="button has-text-weight-bold">View Team</a>
-                    </Link>
+                    <>
+                      <Link href={`/teams/${team?.uniqueId}`}>
+                        <a className="button has-text-weight-bold m-r-1">View Team</a>
+                      </Link>
+                      <Link href={`/teams/${team?.uniqueId}/manage`}>
+                        <a className="button has-text-weight-bold">Edit Team</a>
+                      </Link>
+                    </>
                   ) : (
                     <Link href="/create-team">
                       <a className="button has-text-white has-text-weight-bold theme-color-bg no-border">Create Team</a>

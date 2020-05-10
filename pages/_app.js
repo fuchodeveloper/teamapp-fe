@@ -1,6 +1,7 @@
 import { ApolloProvider } from '@apollo/react-hooks';
 import App from 'next/app';
 import React from 'react';
+import ReactNotification from 'react-notifications-component';
 import 'react-datepicker/dist/react-datepicker.css';
 import { client } from '../client';
 import '../node_modules/@fortawesome/fontawesome-free/js/all';
@@ -9,6 +10,7 @@ import '../styles/index.scss';
 function MyApp({ Component, ...pageProps }) {
   return (
     <ApolloProvider client={client}>
+      <ReactNotification />
       <Component {...pageProps} />
     </ApolloProvider>
   );

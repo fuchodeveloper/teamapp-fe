@@ -52,6 +52,7 @@
     "react-datepicker": "^2.14.1",
     "react-dom": "^16.13.1",
     "react-loading-skeleton": "^2.0.1",
+    "react-notifications-component": "^2.4.0",
     "sass": "^1.26.3",
     "yup": "^0.28.3"
   },

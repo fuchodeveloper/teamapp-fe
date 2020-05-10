@@ -1,6 +1,7 @@
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import { Formik } from 'formik';
+import classnames from 'classnames';
 import Router from 'next/router';
 import Link from 'next/link';
 import { Fragment, useEffect, useState } from 'react';
@@ -20,6 +21,10 @@ const CreateMembers = (props) => {
   const [getTeam, { called, loading, data: teamData, error: teamError }] = useLazyQuery(GET_TEAM);
   const serverError = membersError?.graphQLErrors?.[0] || {};
   const { code } = membersError?.graphQLErrors?.[0]?.extensions || {};
+  const loadingClass = classnames({ 'is-loading': membersLoading });
+  const teamMembersCount = teamData?.team?.members?.length;
+  console.log('teamData', teamData);
+  
 
   useEffect(() => {
     if (teamId) {
@@ -224,6 +229,7 @@ const CreateMembers = (props) => {
                           );
                         })}
 
+                        <span className="help has-text-right">Members count: 6/10</span>
                         <hr />
 
                         <div className="field is-horizontal">
@@ -234,7 +240,7 @@ const CreateMembers = (props) => {
                                 <button
                                   disabled={isSubmitting || disabledState || membersLoading}
                                   type="submit"
-                                  className="button has-text-white has-text-weight-bold theme-color-bg m-r-1 no-border"
+                                  className={`button has-text-white has-text-weight-bold theme-color-bg m-r-1 no-border ${loadingClass}`}
                                 >
                                   Add Members
                                 </button>
@@ -277,6 +283,9 @@ const GET_TEAM = gql`
     team(id: $id, uniqueId: $uniqueId) {
       id
       uniqueId
+      members {
+        id
+      }
     }
   }
 `;

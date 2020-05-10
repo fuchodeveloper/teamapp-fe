@@ -3,15 +3,16 @@ import classnames from 'classnames';
 import { addDays } from 'date-fns';
 import { Formik } from 'formik';
 import Link from 'next/link';
+import Router from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import Header from '~/components/Header';
 import LoadingContainer from '~/components/LoadingContainer';
-import { getUser } from '~/utils/auth';
-import { manageTeamLeadSchema } from '~/validation/team';
-import { GET_TEAM, GET_TEAM_LEAD, MANAGE_TEAMLEAD, DELETE_MEMBER, DELETE_TEAM } from '~/utils/manageTeamUtil';
-import Router from 'next/router';
 import NotFound from '~/components/team/NotFound';
+import { getUser } from '~/utils/auth';
+import { DELETE_MEMBER, DELETE_TEAM, GET_TEAM, GET_TEAM_LEAD, MANAGE_TEAMLEAD } from '~/utils/manageTeamUtil';
+import { manageTeamLeadSchema } from '~/validation/team';
+import { showNotification } from '~/utils/notification';
 
 type Props = {
   pageProps: {
@@ -67,6 +68,10 @@ const Manage = (props: Props) => {
     DELETE_TEAM,
   );
 
+  const teamMembersCount = teamData?.team?.members?.length;
+  const { start, stop, duties, user } = teamLeadData?.createOrUpdateTeamLead || {};
+  const teamLeadUpdated = start || stop || user || duties;
+
   const newDuties = teamLeadData?.createOrUpdateTeamLead?.duties;
   const updatedTeamUsers = deleteData?.deleteUser;
 
@@ -82,10 +87,16 @@ const Manage = (props: Props) => {
       setTeamState({ ...teamData?.team, duties: newDuties });
     }
     if (updatedTeamUsers?.length || updatedTeamUsers?.length === 0) {
+      const options = { message: 'Team member deleted.', type: 'success' };
+      showNotification(options);
       setTeamState({ ...teamData?.team, members: [...updatedTeamUsers] });
     }
     if (updatedTeamUsers) {
       setShowModal(false);
+    }
+    if (teamLeadUpdated) {
+      const options = { message: 'Team lead updated.', type: 'success' };
+      showNotification(options);
     }
   }, [teamData?.team, newDuties, updatedTeamUsers]);
 
@@ -105,7 +116,6 @@ const Manage = (props: Props) => {
   const { team } = teamData || {};
   const { uniqueId } = team || {};
   const members = teamState?.members || [];
-  console.log('team', team);
 
   const toggleModal = (val: boolean) => {
     setShowModal(val);
@@ -382,7 +392,7 @@ const Manage = (props: Props) => {
                             <button
                               type="submit"
                               className={`button has-text-white has-text-weight-bold theme-color-bg no-border m-r-1 ${teamLeadLoadingClass}`}
-                              disabled={isSubmitting}
+                              disabled={isSubmitting || teamLeadLoading}
                             >
                               Submit
                             </button>
@@ -458,18 +468,21 @@ const Manage = (props: Props) => {
                       )}
                     </tbody>
                   </table>
-                  {showModal && (
-                    <TeamRosterModal
-                      toggleModal={toggleModal}
-                      showModalClass={showModalClass}
-                      modalState={modalState}
-                    />
-                  )}
-                  <div className="has-text-right">
-                    <Link href={`/teams/${uniqueId}/add-members`}>
-                      <a className="button has-text-weight-bold">Add Team Members</a>
-                    </Link>
-                  </div>
+                </div>
+                {showModal && (
+                  <TeamRosterModal toggleModal={toggleModal} showModalClass={showModalClass} modalState={modalState} />
+                )}
+                <div className="has-text-right m-b-05">
+                  <span className="help">Members count: {members?.length}/10</span>
+                </div>
+                <div className="has-text-right">
+                  <Link href={`/teams/${uniqueId}/add-members`}>
+                    <a className="has-text-weight-bold">
+                      <button className="button" disabled={teamMembersCount >= 10}>
+                        Add Team Members
+                      </button>
+                    </a>
+                  </Link>
                 </div>
               </div>
             </div>
