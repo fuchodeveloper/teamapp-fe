@@ -229,7 +229,7 @@ const CreateMembers = (props) => {
                           );
                         })}
 
-                        <span className="help has-text-right">Members count: 6/10</span>
+                        {/* <span className="help has-text-right">Members count: 6/10</span> */}
                         <hr />
 
                         <div className="field is-horizontal">
