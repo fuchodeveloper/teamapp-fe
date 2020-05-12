@@ -87,8 +87,8 @@ const Manage = (props: Props) => {
       setTeamState({ ...teamData?.team, duties: newDuties });
     }
     if (updatedTeamUsers?.length || updatedTeamUsers?.length === 0) {
-      const options = { message: 'Team member deleted.', type: 'success' };
-      showNotification(options);
+      // const options = { message: 'Team member deleted.', type: 'success' };
+      // showNotification(options);
       setTeamState({ ...teamData?.team, members: [...updatedTeamUsers] });
     }
     if (updatedTeamUsers) {
@@ -96,7 +96,7 @@ const Manage = (props: Props) => {
     }
     if (teamLeadUpdated) {
       const options = { message: 'Team lead updated.', type: 'success' };
-      showNotification(options);
+      // showNotification(options);
     }
   }, [teamData?.team, newDuties, updatedTeamUsers]);
 

@@ -154,6 +154,7 @@ const SIGN_IN = gql`
       firstName
       lastName
       team
+      email
     }
   }
 `;

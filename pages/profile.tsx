@@ -6,7 +6,7 @@ import LoadingContainer from '~/components/LoadingContainer';
 import { getUser } from '~/utils/auth';
 
 const Profile = (props: any) => {
-  const { _uid } = props?.pageProps || {};
+  const { _uid, _ue, _uf, _ul } = props?.pageProps || {};
   const loggedIn = _uid || false;
 
   const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {
@@ -17,12 +17,19 @@ const Profile = (props: any) => {
     variables: { id: _uid, uniqueId: userData?.user?.team || '' },
   });
 
+  const { data: otherTeamsData, loading: otherTeamsLoading, error: otherTeamsError } = useQuery(OTHER_TEAMS, {
+    variables: { email: _ue, firstName: _uf, lastName: _ul },
+  });
+
   if (userLoading) return <LoadingContainer pageProps={props?.pageProps} />;
   if (teamLoading) return <LoadingContainer pageProps={props?.pageProps} />;
 
   if (teamError) return <div>An unexpected error occurred!</div>;
 
   const { team } = teamData || {};
+  const { otherTeams } = otherTeamsData || [];
+  console.log('otherTeamsData', otherTeams);
+  
 
   return (
     <>
@@ -86,7 +93,20 @@ const Profile = (props: any) => {
                   <h2 className="title">Other Teams</h2>
                 </div>
                 <hr />
-                <p>You don't belong to any team.</p>
+                {otherTeams?.length ? (
+                  <>
+                    {otherTeams?.map((team: any) => (
+                      <div key={team.id}>
+                        <p>
+                          <strong>Team ID:</strong> {team.teamUniqueId} ➡{' '}
+                          <a href={`/teams/${team.teamUniqueId}`}>View Team</a>
+                        </p>
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <p>You don't belong to any team.</p>
+                )}
               </div>
             </div>
           </div>
@@ -115,6 +135,15 @@ const GET_USER = gql`
       team
       role
       email
+    }
+  }
+`;
+
+const OTHER_TEAMS = gql`
+  query OtherUsers($email: String!, $firstName: String!, $lastName: String!) {
+    otherTeams(email: $email, firstName: $firstName, lastName: $lastName) {
+      id
+      teamUniqueId
     }
   }
 `;

@@ -49,6 +49,7 @@ export const saveUser = (userData) => {
   Cookies.set('_ut', userData?.team || '');
   Cookies.set('_uf', userData?.firstName || '');
   Cookies.set('_ul', userData?.lastName || '');
+  Cookies.set('_ue', userData?.email || '');
 };
 
 /**
@@ -86,6 +87,7 @@ export const removeUser = () => {
   Cookies.remove('_ut');
   Cookies.remove('_uf');
   Cookies.remove('_ul');
+  Cookies.remove('_ue');
 };
 
 // TODO: deprecate method
