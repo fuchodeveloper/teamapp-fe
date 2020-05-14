@@ -23,8 +23,6 @@ const CreateMembers = (props) => {
   const { code } = membersError?.graphQLErrors?.[0]?.extensions || {};
   const loadingClass = classnames({ 'is-loading': membersLoading });
   const teamMembersCount = teamData?.team?.members?.length;
-  console.log('teamData', teamData);
-  
 
   useEffect(() => {
     if (teamId) {
@@ -32,7 +30,6 @@ const CreateMembers = (props) => {
     }
   }, [teamId]);
 
-  // TODO: redirect user to team page after creating team
   if (!membersLoading && membersData?.createTeamUsers?.length > 0) {
     Router.push(`/teams/${teamId}`);
   }
