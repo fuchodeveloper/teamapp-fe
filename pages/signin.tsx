@@ -152,7 +152,6 @@ const SIGN_IN = gql`
     login(email: $email, password: $password) {
       id
       firstName
-      lastName
       team
       email
     }
@@ -160,6 +159,7 @@ const SIGN_IN = gql`
 `;
 
 export const getServerSideProps = async (ctx: object) => {
+  console.log('Signin:context', ctx);
   // Check user's session
   const session = getUser(ctx);
   

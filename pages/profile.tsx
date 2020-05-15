@@ -149,6 +149,7 @@ const OTHER_TEAMS = gql`
 `;
 
 export const getServerSideProps = async (ctx: any) => {
+  console.log('Profile:context', ctx);
   // Check user's session
   const session = getUser(ctx);
 
