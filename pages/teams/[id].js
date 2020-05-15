@@ -2,7 +2,6 @@ import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import Link from 'next/link';
 import React, { Fragment } from 'react';
-import Skeleton from 'react-loading-skeleton';
 import Header from '~/components/Header';
 import LoadingContainer from '~/components/LoadingContainer';
 import TeamDetails from '~/components/TeamDetails';
@@ -24,6 +23,8 @@ const ViewTeam = (props) => {
   if (teamError) return <div>An unexpected error occurred!</div>;
 
   const { team } = teamData || {};
+  console.log('teamData', teamData );
+  
 
   return (
     <Fragment>
@@ -56,6 +57,7 @@ const ViewTeam = (props) => {
           {team?.members?.length ? (
             <>
               <TeamLeadDetails
+                creator={team?.creator}
                 uniqueId={team?.uniqueId}
                 lead={team?.teamLead?.lead}
                 user={team?.teamLead?.user}

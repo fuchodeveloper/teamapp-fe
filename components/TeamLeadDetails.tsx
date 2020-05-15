@@ -4,7 +4,7 @@ import ManageTeamLeadModal from './team/ManageTeamLeadModal';
 import Link from 'next/link';
 
 const TeamLeadDetails = (props: any) => {
-  const { uniqueId, lead, user, members } = props || {};
+  const { uniqueId, lead, user, members, creator } = props || {};
   const [showModal, setShowModal] = useState(false);
 
   const renderModal = () => {

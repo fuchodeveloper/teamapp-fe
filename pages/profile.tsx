@@ -6,7 +6,7 @@ import LoadingContainer from '~/components/LoadingContainer';
 import { getUser } from '~/utils/auth';
 
 const Profile = (props: any) => {
-  const { _uid, _ue, _uf, _ul } = props?.pageProps || {};
+  const { _uid, _ue, _uf } = props?.pageProps || {};
   const loggedIn = _uid || false;
 
   const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {
@@ -18,7 +18,7 @@ const Profile = (props: any) => {
   });
 
   const { data: otherTeamsData, loading: otherTeamsLoading, error: otherTeamsError } = useQuery(OTHER_TEAMS, {
-    variables: { email: _ue, firstName: _uf, lastName: _ul },
+    variables: { email: _ue, firstName: _uf },
   });
 
   if (userLoading) return <LoadingContainer pageProps={props?.pageProps} />;
@@ -140,8 +140,8 @@ const GET_USER = gql`
 `;
 
 const OTHER_TEAMS = gql`
-  query OtherUsers($email: String!, $firstName: String!, $lastName: String!) {
-    otherTeams(email: $email, firstName: $firstName, lastName: $lastName) {
+  query OtherUsers($email: String!, $firstName: String!) {
+    otherTeams(email: $email, firstName: $firstName) {
       id
       teamUniqueId
     }
