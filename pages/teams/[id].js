@@ -10,7 +10,7 @@ import { getUser } from '~/utils/auth';
 
 const ViewTeam = (props) => {
   /**
-   * team id represented as `id`
+   * use teamId and authenticated userId to fetch team data
    */
   const { teamId, _uid } = props?.pageProps || {};
 
@@ -23,8 +23,6 @@ const ViewTeam = (props) => {
   if (teamError) return <div>An unexpected error occurred!</div>;
 
   const { team } = teamData || {};
-  console.log('teamData', teamData );
-  
 
   return (
     <Fragment>
