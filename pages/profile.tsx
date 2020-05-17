@@ -24,7 +24,7 @@ const Profile = (props: any) => {
   if (userLoading) return <LoadingContainer pageProps={props?.pageProps} />;
   if (teamLoading) return <LoadingContainer pageProps={props?.pageProps} />;
 
-  if (teamError) return <div>An unexpected error occurred!</div>;
+  // if (teamError) return <div>An unexpected error occurred!</div>;
 
   const { team } = teamData || {};
   const { otherTeams } = otherTeamsData || [];
