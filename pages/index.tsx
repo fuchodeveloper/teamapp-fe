@@ -43,7 +43,6 @@ const Index = (props: authUser) => {
 };
 
 export const getServerSideProps = async (context: object) => {
-  console.log('Index:context', context);
   
   // Check user's session
   const session = getUser(context);

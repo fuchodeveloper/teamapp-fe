@@ -24,11 +24,14 @@ const Profile = (props: any) => {
   if (userLoading) return <LoadingContainer pageProps={props?.pageProps} />;
   if (teamLoading) return <LoadingContainer pageProps={props?.pageProps} />;
 
+  if (teamError) {
+    return Error('Unexpected errorrrrr')
+  };
   // if (teamError) return <div>An unexpected error occurred!</div>;
 
   const { team } = teamData || {};
   const { otherTeams } = otherTeamsData || [];
-  console.log('otherTeamsData', otherTeams);
+  // console.log('otherTeamsData', otherTeams);
   
 
   return (

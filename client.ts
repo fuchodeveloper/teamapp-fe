@@ -9,7 +9,7 @@ const appUrl =
     : 'http://localhost:4001/graphql';
 
 const httpLink = createHttpLink({
-  uri: appUrl,
+  uri: 'http://localhost:4001/graphql',
   credentials: 'include',
 });
 
