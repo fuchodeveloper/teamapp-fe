@@ -57,7 +57,6 @@ const ViewTeam = (props) => {
           {team?.members?.length ? (
             <>
               <TeamLeadDetails
-                creator={team?.creator}
                 uniqueId={team?.uniqueId}
                 lead={team?.teamLead?.lead}
                 user={team?.teamLead?.user}

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Cookies from 'js-cookie';
 
 const TeamLeadDetails = (props: any) => {
-  const { uniqueId, lead, user, members, creator } = props || {};
+  const { uniqueId, lead, user, members } = props || {};
   const [showModal, setShowModal] = useState(false);
   const authUserTeamId = Cookies.get('_ut');
   const isUserCreator = uniqueId === authUserTeamId
@@ -66,7 +66,7 @@ const TeamLeadDetails = (props: any) => {
                       <td>{format(new Date(lead.start), 'E, dd MMM. yyyy')}</td>
                       <td>{format(new Date(lead.stop), 'E, dd MMM. yyyy')}</td>
                       <td>
-                        <a title="">View duties</a>
+                        <a>View duties</a>
                       </td>
                     </tr>
                   </Fragment>
