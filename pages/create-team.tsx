@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Router from 'next/router';
 import { Fragment } from 'react';
 import classnames from 'classnames';
+import Cookies from 'js-cookie';
 import LoadingContainer from '~/components/LoadingContainer';
 import { getUser } from '~/utils/auth';
 import Header from '../components/Header';
@@ -21,6 +22,7 @@ const CreateTeam = (props: any) => {
   const loadingClass = classnames({ 'is-loading': teamLoading });
 
   if (teamId) {
+    Cookies.set('_ut', teamId || '');
     Router.push(`/teams/${teamId}`);
   }
 
@@ -169,6 +171,7 @@ const GET_USER = gql`
 `;
 
 export const getServerSideProps = async (ctx: any) => {
+
   // Check user's session
   const session = getUser(ctx);
 

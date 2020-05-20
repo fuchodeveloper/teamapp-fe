@@ -25,7 +25,7 @@ const Profile = (props: any) => {
   if (teamLoading) return <LoadingContainer pageProps={props?.pageProps} />;
 
   if (teamError) {
-    return Error('Unexpected errorrrrr')
+    return Error('Unexpected error')
   };
   // if (teamError) return <div>An unexpected error occurred!</div>;
 

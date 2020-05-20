@@ -20,7 +20,9 @@ const ViewTeam = (props) => {
 
   if (teamLoading) return <LoadingContainer pageProps={props?.pageProps} />;
 
-  if (teamError) return <div>An unexpected error occurred!</div>;
+  if (teamError) {
+    return Error('Unexpected error');
+  }
 
   const { team } = teamData || {};
 

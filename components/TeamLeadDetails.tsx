@@ -2,10 +2,13 @@ import format from 'date-fns/format';
 import { Fragment, useState } from 'react';
 import ManageTeamLeadModal from './team/ManageTeamLeadModal';
 import Link from 'next/link';
+import Cookies from 'js-cookie';
 
 const TeamLeadDetails = (props: any) => {
   const { uniqueId, lead, user, members, creator } = props || {};
   const [showModal, setShowModal] = useState(false);
+  const authUserTeamId = Cookies.get('_ut');
+  const isUserCreator = uniqueId === authUserTeamId
 
   const renderModal = () => {
     return (
@@ -81,9 +84,11 @@ const TeamLeadDetails = (props: any) => {
             {/* <button className="button" onClick={() => toggleModal(true)}>
               Manage Team Lead
             </button> */}
-            <Link href={`/teams/${uniqueId}/manage`}>
-              <a className="button has-text-white has-text-weight-bold theme-color-bg no-border">Edit Team</a>
-            </Link>
+            {isUserCreator && (
+              <Link href={`/teams/${uniqueId}/manage`}>
+                <a className="button has-text-white has-text-weight-bold theme-color-bg no-border">Edit Team</a>
+              </Link>
+            )}
           </div>
         </div>
         {showModal && renderModal()}

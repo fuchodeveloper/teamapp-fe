@@ -26,7 +26,7 @@ function Error({ statusCode }) {
           ) : (
             <>
               <p>
-                <strong>404 - Looks like the resource failed to load. Try again.</strong>
+                <strong>Looks like the resource failed to load. Try again.</strong>
               </p>
               <p>
                 Go to <a href="/">home</a>
