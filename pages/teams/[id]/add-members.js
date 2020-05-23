@@ -1,16 +1,15 @@
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
-import { Formik } from 'formik';
 import classnames from 'classnames';
-import Router from 'next/router';
+import { Formik } from 'formik';
 import Link from 'next/link';
+import Router from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
 import Header from '~/components/Header';
 import { getUser } from '~/utils/auth';
 
 const CreateMembers = (props) => {
   const { _uid } = props?.pageProps;
-  // const loggedIn = pageProps?.loggedIn || false;
   const teamId = props?.pageProps?.id;
 
   const [inputFields, setInputFields] = useState([{ firstName: '', lastName: '', email: '', teamUniqueId: '' }]);

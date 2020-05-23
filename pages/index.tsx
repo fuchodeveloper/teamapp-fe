@@ -34,7 +34,6 @@ const Index = (props: authUser) => {
                 <a className="button theme-color-bg has-text-white no-border m-r-1 has-text-weight-bold">Get Started</a>
               </Link>
             )}
-            {/* <a className="button no-border has-text-weight-bold theme-color-text">How It Works</a> */}
           </div>
         </div>
       </section>
