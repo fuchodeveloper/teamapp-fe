@@ -241,9 +241,7 @@ const CreateMembers = (props) => {
                                   Add Members
                                 </button>
                                 <Link href={`/teams/${teamId}/manage`}>
-                                  <a className="button has-text-weight-bold">
-                                    Go Back
-                                  </a>
+                                  <a className="button has-text-weight-bold">Go Back</a>
                                 </Link>
                               </div>
                             </div>

@@ -3,6 +3,7 @@ import React from 'react';
 import { logout as logoutAuth } from '~/utils/auth';
 import { Provider } from '../utils/appContext';
 
+// TODO: deprecate provider
 const AuthProvider = (props: any) => {
   /**
    * cookie not available on FE AND can't use SSR outside /pages
